@@ -17,6 +17,7 @@ export interface Table {
   elapsedMinutes?: number;
   orderId?: string;
   mergedWith?: string[]; // IDs of tables merged with this one
+  reservationName?: string;
 }
 
 export interface MenuItem {
