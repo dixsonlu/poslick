@@ -268,6 +268,10 @@ const AdminPromotions: React.FC = () => {
           <h1 className="text-xl font-bold text-foreground">Promotions & Pricing</h1>
           <p className="text-[13px] text-muted-foreground mt-1">Manage discounts, campaigns, and dynamic pricing strategies</p>
         </div>
+        <Button className="gap-1.5 text-[13px] rounded-lg">
+          <Plus className="h-4 w-4" />
+          Create Promotion
+        </Button>
       </div>
 
       <Tabs value={activeMainTab} onValueChange={setActiveMainTab} className="w-full">
@@ -322,6 +326,45 @@ const PromotionsListView: React.FC<{
 }> = ({ filtered, statusFilter, setStatusFilter, search, setSearch, totalActive, totalGMV, totalUsage, toggleStatus, setSelectedId }) => (
   <>
     {/* KPI cards */}
+    <div className="grid gap-4 md:grid-cols-3 mb-6">
+      <div className="uniweb-card relative overflow-hidden p-5">
+        <div className="kpi-stripe bg-status-green" />
+        <div className="section-label mt-1.5 mb-2">Active Campaigns</div>
+        <div className="text-2xl font-bold text-foreground">{totalActive}</div>
+      </div>
+      <div className="uniweb-card relative overflow-hidden p-5">
+        <div className="kpi-stripe bg-primary" />
+        <div className="section-label mt-1.5 mb-2">Total GMV</div>
+        <div className="text-2xl font-bold text-foreground">${totalGMV.toLocaleString()}</div>
+      </div>
+      <div className="uniweb-card relative overflow-hidden p-5">
+        <div className="kpi-stripe bg-status-amber" />
+        <div className="section-label mt-1.5 mb-2">Total Usage</div>
+        <div className="text-2xl font-bold text-foreground">{totalUsage}</div>
+      </div>
+    </div>
+
+    {/* Quick Create templates */}
+    <div className="mb-6">
+      <div className="section-label mb-3">Quick Create</div>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {templates.map(tmpl => {
+          const cfg = typeConfig[tmpl.type];
+          return (
+            <button
+              key={tmpl.name}
+              className="uniweb-card p-4 text-left hover:border-primary/40 transition-colors group"
+            >
+              <span className={cn("inline-flex p-2 rounded-lg mb-2", cfg.color)}>{tmpl.icon}</span>
+              <div className="text-[13px] font-semibold text-foreground">{tmpl.name}</div>
+              <div className="text-[11px] text-muted-foreground mt-0.5">Create from template</div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+
+    {/* Filters */}
     <div className="grid gap-4 md:grid-cols-3 mb-6">
       <div className="uniweb-card relative overflow-hidden p-5">
         <div className="kpi-stripe bg-status-green" />
