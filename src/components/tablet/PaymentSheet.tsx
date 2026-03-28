@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 interface PaymentSheetProps {
   order: Order;
   onClose: () => void;
-  onComplete: (method?: string) => void;
+  onComplete: (method?: string, cashReceived?: number) => void;
 }
 
 type PaymentTab = "card" | "cash" | "qr";
@@ -55,7 +55,7 @@ export const PaymentSheet: React.FC<PaymentSheetProps> = ({ order, onClose, onCo
 
   if (isComplete) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 animate-fade-in" onClick={() => onComplete(completedMethod)}>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 animate-fade-in" onClick={() => onComplete(completedMethod, completedMethod === "Cash" ? cashAmount : undefined)}>
         <div className="bg-card rounded-2xl shadow-2xl w-full max-w-sm mx-4 p-8 text-center animate-slide-up border-1.5 border-border" onClick={e => e.stopPropagation()}>
           <div className="w-16 h-16 rounded-2xl bg-status-green-light flex items-center justify-center mx-auto mb-4">
             <Check className="h-8 w-8 text-status-green" />
@@ -65,7 +65,7 @@ export const PaymentSheet: React.FC<PaymentSheetProps> = ({ order, onClose, onCo
           {completedMethod === "Cash" && changeDue > 0 && (
             <p className="text-status-green text-[13px] font-semibold">Change: ${changeDue.toFixed(2)}</p>
           )}
-          <Button className="w-full mt-6 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground" size="xl" onClick={() => onComplete(completedMethod)}>{t("done")}</Button>
+          <Button className="w-full mt-6 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground" size="xl" onClick={() => onComplete(completedMethod, completedMethod === "Cash" ? cashAmount : undefined)}>{t("done")}</Button>
         </div>
       </div>
     );
