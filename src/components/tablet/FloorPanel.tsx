@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Search, ShoppingBag, Truck, ArrowRightLeft, Merge, Split, X, Check, Users, Maximize2, Minimize2 } from "lucide-react";
+import { Search, ShoppingBag, Truck, ArrowRightLeft, Merge, Split, X, Check, Users, Maximize2, Minimize2, CalendarCheck, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { type Table, type TableStatus, type ServiceMode, zones } from "@/data/mock-data";
@@ -18,6 +18,8 @@ interface FloorPanelProps {
   onSplitTable?: (tableId: string, count: number) => void;
   isFullscreen?: boolean;
   onToggleFullscreen?: () => void;
+  onSeatReserved?: (tableId: string) => void;
+  onReserveTable?: (tableId: string, guestCount: number, customerName?: string) => void;
 }
 
 const statusConfig: Record<TableStatus, { dot: string; border: string; bg: string; labelKey: string; badgeBg: string; badgeText: string }> = {
@@ -35,6 +37,7 @@ export const FloorPanel: React.FC<FloorPanelProps> = ({
   tables, selectedTableId, onSelectTable, onCreateWalkIn,
   onTransferTable, onMergeTables, onSplitTable,
   isFullscreen, onToggleFullscreen,
+  onSeatReserved, onReserveTable,
 }) => {
   const { t } = useLanguage();
   const [activeZone, setActiveZone] = useState<string>("All");
