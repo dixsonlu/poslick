@@ -365,25 +365,6 @@ const PromotionsListView: React.FC<{
     </div>
 
     {/* Filters */}
-    <div className="grid gap-4 md:grid-cols-3 mb-6">
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-status-green" />
-        <div className="section-label mt-1.5 mb-2">Active Campaigns</div>
-        <div className="text-2xl font-bold text-foreground">{totalActive}</div>
-      </div>
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-primary" />
-        <div className="section-label mt-1.5 mb-2">Total GMV</div>
-        <div className="text-2xl font-bold text-foreground">${totalGMV.toLocaleString()}</div>
-      </div>
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-status-amber" />
-        <div className="section-label mt-1.5 mb-2">Total Usage</div>
-        <div className="text-2xl font-bold text-foreground">{totalUsage}</div>
-      </div>
-    </div>
-
-    {/* Filters */}
     <div className="mb-4 flex flex-wrap items-center gap-3">
       <div className="flex gap-1 bg-accent rounded-lg p-0.5">
         {(["all", "active", "scheduled", "expired", "draft"] as const).map(s => (
