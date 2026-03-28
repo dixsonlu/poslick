@@ -262,7 +262,29 @@ export const FloorPanel: React.FC<FloorPanelProps> = ({
 
       {/* Table Actions */}
       {showActions && !isFullscreen && (
-        <div className="px-3 py-2 border-t border-border">
+        <div className="px-3 py-2 border-t border-border space-y-1.5">
+          {/* Reserve / Seat actions for available and reserved tables */}
+          {selectedTable?.status === "available" && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full justify-start gap-2 text-xs rounded-lg min-h-[40px]"
+              onClick={() => setShowReserveDialog(true)}
+            >
+              <CalendarCheck className="h-3.5 w-3.5" />
+              {lang === "zh" ? "预订座位" : "Reserve Table"}
+            </Button>
+          )}
+          {selectedTable?.status === "reserved" && (
+            <Button
+              size="sm"
+              className="w-full justify-start gap-2 text-xs rounded-lg min-h-[40px]"
+              onClick={() => { if (selectedTableId) onSeatReserved?.(selectedTableId); }}
+            >
+              <UserCheck className="h-3.5 w-3.5" />
+              {lang === "zh" ? "入座" : "Seat Guests"}
+            </Button>
+          )}
           <div className="flex gap-1">
             <button
               onClick={() => setTableAction("transfer")}
@@ -285,6 +307,47 @@ export const FloorPanel: React.FC<FloorPanelProps> = ({
               <Split className="h-3.5 w-3.5" />
               {t("split_table")}
             </button>
+          </div>
+        </div>
+      )}
+
+      {/* Reserve Table Dialog */}
+      {showReserveDialog && selectedTableId && (
+        <div className="px-3 py-3 border-t border-border bg-accent/30 space-y-2">
+          <div className="text-[11px] font-semibold text-foreground">{lang === "zh" ? "预订桌位" : "Reserve Table"} #{tables.find(t => t.id === selectedTableId)?.number}</div>
+          <input
+            type="text"
+            placeholder={lang === "zh" ? "客户姓名（可选）" : "Customer name (optional)"}
+            value={reserveCustomerName}
+            onChange={e => setReserveCustomerName(e.target.value)}
+            className="w-full h-8 px-2.5 rounded-md bg-background border-1.5 border-border text-[12px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary transition-all"
+          />
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] text-muted-foreground">{lang === "zh" ? "人数" : "Guests"}:</span>
+            {[1, 2, 3, 4, 5, 6, 8].map(n => (
+              <button
+                key={n}
+                onClick={() => setReserveGuestCount(n)}
+                className={cn(
+                  "w-7 h-7 rounded-md text-[11px] font-bold transition-colors",
+                  reserveGuestCount === n ? "bg-primary text-primary-foreground" : "bg-card border border-border text-foreground"
+                )}
+              >
+                {n}
+              </button>
+            ))}
+          </div>
+          <div className="flex gap-1.5">
+            <Button variant="outline" size="sm" className="flex-1 text-[11px] h-8" onClick={() => { setShowReserveDialog(false); setReserveCustomerName(""); }}>
+              {t("cancel")}
+            </Button>
+            <Button size="sm" className="flex-1 text-[11px] h-8" onClick={() => {
+              onReserveTable?.(selectedTableId, reserveGuestCount, reserveCustomerName || undefined);
+              setShowReserveDialog(false);
+              setReserveCustomerName("");
+            }}>
+              {t("confirm")}
+            </Button>
           </div>
         </div>
       )}
