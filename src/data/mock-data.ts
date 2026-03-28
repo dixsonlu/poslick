@@ -238,7 +238,7 @@ export const menuItems: MenuItem[] = [
   { id: "m42", name: "Salted Egg Chicken", nameZh: "咸蛋鸡", price: 12.00, category: "Mains", available: true, image: saltedEggChickenImg },
 
   // Noodles
-  { id: "m12", name: "Hokkien Mee", nameZh: "福建面", price: 7.50, category: "Noodles", available: true, modifierGroups: ["mg1"], image: hokkienMeeImg },
+  { id: "m12", name: "Hokkien Mee", nameZh: "福建面", price: 7.50, category: "Noodles", available: true, popular: true, modifierGroups: ["mg1"], image: hokkienMeeImg },
   { id: "m13", name: "Bak Chor Mee", nameZh: "肉脞面", price: 6.00, category: "Noodles", available: true, modifierGroups: ["mg1", "mg4"], image: bakChorMeeImg },
   { id: "m14", name: "Wonton Noodles", nameZh: "云吞面", price: 5.50, category: "Noodles", available: true, modifierGroups: ["mg4"], image: wontonNoodlesImg },
   { id: "m43", name: "Mee Siam", nameZh: "米暹", price: 5.00, category: "Noodles", available: true, modifierGroups: ["mg1"], image: meeSiamImg },
