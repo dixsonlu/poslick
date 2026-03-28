@@ -212,16 +212,6 @@ import sojuImg from "@/assets/soju.jpg";
 import whiskyHighballImg from "@/assets/whisky-highball.jpg";
 
 export const menuItems: MenuItem[] = [
-  // Popular
-  { id: "m1", name: "Chicken Rice", nameZh: "海南鸡饭", price: 5.50, category: "Popular", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: chickenRiceImg },
-  { id: "m2", name: "Laksa", nameZh: "叻沙", price: 7.00, category: "Popular", available: true, popular: true, modifierGroups: ["mg1"], image: laksaImg },
-  { id: "m3", name: "Char Kway Teow", nameZh: "炒粿条", price: 6.50, category: "Popular", available: true, popular: true, modifierGroups: ["mg1"], image: charKwayTeowImg },
-  { id: "m8", name: "Chilli Crab", nameZh: "辣椒螃蟹", price: 38.00, category: "Popular", available: true, popular: true, modifierGroups: ["mg1"], image: chilliCrabImg },
-  { id: "m15", name: "Nasi Lemak", nameZh: "椰浆饭", price: 6.50, category: "Popular", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: nasiLemakImg },
-  { id: "m22", name: "Teh Tarik", nameZh: "拉茶", price: 2.50, category: "Popular", available: true, popular: true, image: tehTarikImg },
-  { id: "m12", name: "Hokkien Mee", nameZh: "福建面", price: 7.50, category: "Popular", available: true, popular: true, modifierGroups: ["mg1"], image: hokkienMeeImg },
-  { id: "m60", name: "Bak Kut Teh", nameZh: "肉骨茶", price: 9.80, category: "Popular", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: bakKutTehImg },
-
   // Starters
   { id: "m4", name: "Satay (10pc)", nameZh: "沙爹 (10串)", price: 12.00, category: "Starters", available: true, modifierGroups: ["mg2"], image: satayImg },
   { id: "m5", name: "Prawn Crackers", nameZh: "虾片", price: 4.50, category: "Starters", available: true, image: prawnCrackersImg },
