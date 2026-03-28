@@ -212,16 +212,6 @@ import sojuImg from "@/assets/soju.jpg";
 import whiskyHighballImg from "@/assets/whisky-highball.jpg";
 
 export const menuItems: MenuItem[] = [
-  // Popular
-  { id: "m1", name: "Chicken Rice", nameZh: "海南鸡饭", price: 5.50, category: "Popular", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: chickenRiceImg },
-  { id: "m2", name: "Laksa", nameZh: "叻沙", price: 7.00, category: "Popular", available: true, popular: true, modifierGroups: ["mg1"], image: laksaImg },
-  { id: "m3", name: "Char Kway Teow", nameZh: "炒粿条", price: 6.50, category: "Popular", available: true, popular: true, modifierGroups: ["mg1"], image: charKwayTeowImg },
-  { id: "m8", name: "Chilli Crab", nameZh: "辣椒螃蟹", price: 38.00, category: "Popular", available: true, popular: true, modifierGroups: ["mg1"], image: chilliCrabImg },
-  { id: "m15", name: "Nasi Lemak", nameZh: "椰浆饭", price: 6.50, category: "Popular", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: nasiLemakImg },
-  { id: "m22", name: "Teh Tarik", nameZh: "拉茶", price: 2.50, category: "Popular", available: true, popular: true, image: tehTarikImg },
-  { id: "m12", name: "Hokkien Mee", nameZh: "福建面", price: 7.50, category: "Popular", available: true, popular: true, modifierGroups: ["mg1"], image: hokkienMeeImg },
-  { id: "m60", name: "Bak Kut Teh", nameZh: "肉骨茶", price: 9.80, category: "Popular", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: bakKutTehImg },
-
   // Starters
   { id: "m4", name: "Satay (10pc)", nameZh: "沙爹 (10串)", price: 12.00, category: "Starters", available: true, modifierGroups: ["mg2"], image: satayImg },
   { id: "m5", name: "Prawn Crackers", nameZh: "虾片", price: 4.50, category: "Starters", available: true, image: prawnCrackersImg },
@@ -235,7 +225,8 @@ export const menuItems: MenuItem[] = [
   { id: "m35", name: "You Tiao (Pair)", nameZh: "油条 (一对)", price: 2.50, category: "Starters", available: true, image: youTiaoImg },
 
   // Mains
-  { id: "m8b", name: "Chilli Crab", nameZh: "辣椒螃蟹", price: 38.00, category: "Mains", available: true, popular: true, modifierGroups: ["mg1"], image: chilliCrabImg },
+  { id: "m8", name: "Chilli Crab", nameZh: "辣椒螃蟹", price: 38.00, category: "Mains", available: true, popular: true, modifierGroups: ["mg1"], image: chilliCrabImg },
+  { id: "m60", name: "Bak Kut Teh", nameZh: "肉骨茶", price: 9.80, category: "Mains", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: bakKutTehImg },
   { id: "m9", name: "Black Pepper Crab", nameZh: "黑胡椒螃蟹", price: 38.00, category: "Mains", available: true, modifierGroups: ["mg1"], image: blackPepperCrabImg },
   { id: "m10", name: "Cereal Prawn", nameZh: "麦片虾", price: 22.00, category: "Mains", available: true, image: cerealPrawnImg },
   { id: "m11", name: "Sambal Stingray", nameZh: "叁巴魔鬼鱼", price: 15.00, category: "Mains", available: false, image: sambalStingrayImg },
@@ -248,7 +239,9 @@ export const menuItems: MenuItem[] = [
   { id: "m42", name: "Salted Egg Chicken", nameZh: "咸蛋鸡", price: 12.00, category: "Mains", available: true, image: saltedEggChickenImg },
 
   // Noodles
-  { id: "m12b", name: "Hokkien Mee", nameZh: "福建面", price: 7.50, category: "Noodles", available: true, modifierGroups: ["mg1"], image: hokkienMeeImg },
+  { id: "m2", name: "Laksa", nameZh: "叻沙", price: 7.00, category: "Noodles", available: true, popular: true, modifierGroups: ["mg1"], image: laksaImg },
+  { id: "m3", name: "Char Kway Teow", nameZh: "炒粿条", price: 6.50, category: "Noodles", available: true, popular: true, modifierGroups: ["mg1"], image: charKwayTeowImg },
+  { id: "m12", name: "Hokkien Mee", nameZh: "福建面", price: 7.50, category: "Noodles", available: true, popular: true, modifierGroups: ["mg1"], image: hokkienMeeImg },
   { id: "m13", name: "Bak Chor Mee", nameZh: "肉脞面", price: 6.00, category: "Noodles", available: true, modifierGroups: ["mg1", "mg4"], image: bakChorMeeImg },
   { id: "m14", name: "Wonton Noodles", nameZh: "云吞面", price: 5.50, category: "Noodles", available: true, modifierGroups: ["mg4"], image: wontonNoodlesImg },
   { id: "m43", name: "Mee Siam", nameZh: "米暹", price: 5.00, category: "Noodles", available: true, modifierGroups: ["mg1"], image: meeSiamImg },
@@ -259,7 +252,8 @@ export const menuItems: MenuItem[] = [
   { id: "m48", name: "Bee Hoon Goreng", nameZh: "炒米粉", price: 5.00, category: "Noodles", available: true, modifierGroups: ["mg1"], image: beeHoonGorengImg },
 
   // Rice
-  { id: "m15b", name: "Nasi Lemak", nameZh: "椰浆饭", price: 6.50, category: "Rice", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: nasiLemakImg },
+  { id: "m1", name: "Chicken Rice", nameZh: "海南鸡饭", price: 5.50, category: "Rice", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: chickenRiceImg },
+  { id: "m15", name: "Nasi Lemak", nameZh: "椰浆饭", price: 6.50, category: "Rice", available: true, popular: true, modifierGroups: ["mg1", "mg3"], image: nasiLemakImg },
   { id: "m16", name: "Nasi Goreng", nameZh: "炒饭", price: 7.00, category: "Rice", available: true, modifierGroups: ["mg1"], image: nasiGorengImg },
   { id: "m17", name: "Claypot Rice", nameZh: "砂锅饭", price: 9.50, category: "Rice", available: true, image: claypotRiceImg },
   { id: "m49", name: "Thunder Tea Rice", nameZh: "擂茶饭", price: 6.50, category: "Rice", available: true, image: thunderTeaRiceImg },
@@ -289,7 +283,7 @@ export const menuItems: MenuItem[] = [
   { id: "m66", name: "Pandan Cake", nameZh: "班兰蛋糕", price: 5.00, category: "Desserts", available: true, image: pandanCakeImg },
 
   // Beverages
-  { id: "m22b", name: "Teh Tarik", nameZh: "拉茶", price: 2.50, category: "Beverages", available: true, popular: true, image: tehTarikImg },
+  { id: "m22", name: "Teh Tarik", nameZh: "拉茶", price: 2.50, category: "Beverages", available: true, popular: true, image: tehTarikImg },
   { id: "m23", name: "Kopi O", nameZh: "咖啡乌", price: 1.80, category: "Beverages", available: true, image: kopiOImg },
   { id: "m24", name: "Milo Dinosaur", nameZh: "美禄恐龙", price: 4.00, category: "Beverages", available: true, image: miloDinosaurImg },
   { id: "m25", name: "Lime Juice", nameZh: "酸柑水", price: 2.50, category: "Beverages", available: true, image: limeJuiceImg },

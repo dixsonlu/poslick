@@ -69,6 +69,14 @@ export const FloorPanel: React.FC<FloorPanelProps> = ({
       );
       return;
     }
+    // Confirm before selecting dirty/cleaning tables
+    const table = tables.find(t => t.id === tableId);
+    if (table && (table.status === "dirty" || table.status === "cleaning")) {
+      const confirmed = window.confirm(
+        `Table ${table.number} is currently "${table.status}". Are you sure you want to select it?`
+      );
+      if (!confirmed) return;
+    }
     onSelectTable(tableId);
   };
 
