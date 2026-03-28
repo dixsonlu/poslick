@@ -68,7 +68,7 @@ export const MenuComposer: React.FC<MenuComposerProps> = ({ onAddItem, selectedT
   return (
     <div className="flex-1 flex flex-col bg-background min-w-0">
       {/* Header */}
-      <div className="px-5 py-3 border-b border-border bg-card flex items-center gap-4">
+      <div className="px-5 py-2.5 border-b border-border bg-card flex items-center gap-4">
         <div className="flex-1">
           {selectedTable ? (
             <div className="flex items-center gap-2">
@@ -121,7 +121,7 @@ export const MenuComposer: React.FC<MenuComposerProps> = ({ onAddItem, selectedT
 
       {/* Menu Grid */}
       <div className="flex-1 overflow-y-auto pos-scrollbar p-5">
-        <div className="grid grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+        <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(160px, 1fr))" }}>
           {filteredItems.map(item => {
             const comboDisplay = getComboDisplay(item);
             return (

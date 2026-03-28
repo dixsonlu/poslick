@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useRef } from "react";
-import { Receipt, GripVertical } from "lucide-react";
+import { Receipt } from "lucide-react";
 import { FloorPanel } from "@/components/tablet/FloorPanel";
 import { MenuComposer } from "@/components/tablet/MenuComposer";
 import { CheckPanel } from "@/components/tablet/CheckPanel";
@@ -373,11 +373,11 @@ const TabletPOS: React.FC = () => {
           </div>
           {/* Left drag handle */}
           <div
-            className="w-3 shrink-0 flex items-center justify-center cursor-col-resize hover:bg-primary/10 transition-colors group z-10 border-r border-border"
+            className="w-px shrink-0 bg-border cursor-col-resize relative z-10"
             onMouseDown={() => startDrag("left")}
             onTouchStart={() => startDrag("left")}
           >
-            <GripVertical className="h-5 w-5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-border hover:bg-primary transition-colors" />
           </div>
         </>
       )}
@@ -408,17 +408,17 @@ const TabletPOS: React.FC = () => {
 
           {/* Right drag handle */}
           <div
-            className="w-3 shrink-0 flex items-center justify-center cursor-col-resize hover:bg-primary/10 transition-colors group z-10 border-l border-border"
+            className="w-px shrink-0 bg-border cursor-col-resize relative z-10"
             onMouseDown={() => startDrag("right")}
             onTouchStart={() => startDrag("right")}
           >
-            <GripVertical className="h-5 w-5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-border hover:bg-primary transition-colors" />
           </div>
 
           {/* Right panel: check or history */}
           <div style={{ width: `${rightWidth * 100}%` }} className="shrink-0 flex flex-col">
             {/* Top controls bar — History button + ThemeToggle aligned */}
-            <div className="flex items-center justify-end gap-2 px-3 py-2 border-b border-border bg-card shrink-0">
+            <div className="flex items-center justify-end gap-2 px-3 py-2.5 border-b border-border bg-card shrink-0">
               <button
                 onClick={() => setShowHistory(h => !h)}
                 className={cn(
