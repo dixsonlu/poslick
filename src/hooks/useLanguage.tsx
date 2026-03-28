@@ -1,0 +1,323 @@
+import React, { createContext, useContext, useState, useCallback } from "react";
+
+export type Lang = "en" | "zh";
+
+const dict: Record<Lang, Record<string, string>> = {
+  en: {
+    // General
+    tables: "Tables",
+    floor: "Floor",
+    menu: "Menu",
+    orders: "Orders",
+    settings: "Settings",
+    search: "Search",
+    cancel: "Cancel",
+    confirm: "Confirm",
+    save: "Save",
+    delete: "Delete",
+    back: "Back",
+    close: "Close",
+    all: "All",
+    
+    // Table statuses
+    available: "Available",
+    reserved: "Reserved",
+    ordering: "Ordering",
+    ordered: "Ordered",
+    dirty: "Dirty",
+    cleaning: "Cleaning",
+    
+    // Table actions
+    transfer_table: "Transfer",
+    merge_tables: "Merge",
+    split_table: "Split",
+    select_target: "Select target table",
+    select_tables_to_merge: "Select tables to merge",
+    split_into: "Split into",
+    transfer_from: "Transfer from",
+    merge_confirm: "Confirm Merge",
+    cancel_action: "Cancel",
+    
+    // Zones
+    main_hall: "Main Hall",
+    patio: "Patio",
+    private: "Private",
+    bar: "Bar",
+    
+    // Menu
+    search_table: "Search table...",
+    search_menu: "Search menu...",
+    popular: "Popular",
+    combos: "Combos",
+    starters: "Starters",
+    mains: "Mains",
+    noodles: "Noodles",
+    rice: "Rice",
+    sides: "Sides",
+    desserts: "Desserts",
+    beverages: "Beverages",
+    alcohol: "Alcohol",
+    combo: "COMBO",
+    includes: "Includes",
+    select: "Select",
+    unavailable: "Unavailable",
+    sold_out: "Sold out",
+    add_to_order: "Add to Order",
+    review_order: "Review Order",
+    items: "items",
+    
+    // Modifiers
+    spice_level: "Spice Level",
+    required: "Required",
+    select_one: "Select one",
+    select_multiple: "Select multiple",
+    special_notes: "Special Notes",
+    notes_placeholder: "e.g. No onion, extra chilli...",
+    
+    // Order
+    subtotal: "Subtotal",
+    service_charge: "Service Charge",
+    gst: "GST 9%",
+    total: "Total",
+    pay: "Pay",
+    send_to_kitchen: "Send to Kitchen",
+    
+    // Service modes
+    dine_in: "Dine-in",
+    takeaway: "Takeaway",
+    delivery: "Delivery",
+    pickup: "Pickup",
+    takeaway_order: "Takeaway Order",
+    delivery_order: "Delivery Order",
+    
+    // Table info
+    seats: "seats",
+    guests: "guests",
+    max_seats: "max",
+    
+    // Theme
+    light: "Light",
+    dark: "Dark",
+    language: "Language",
+    english: "English",
+    chinese: "中文",
+    
+    // Admin
+    dashboard: "Dashboard",
+    staff: "Staff",
+    crm: "CRM",
+    kds_monitor: "KDS Monitor",
+    sales_report: "Sales Report",
+    finance: "Finance",
+    
+    // Flexible combo
+    flexible_combo: "Flexible Set",
+    choose_your: "Choose your",
+    selected: "Selected",
+    remaining: "remaining",
+
+    // CheckPanel
+    select_table_start: "Select a table to start",
+    no_items: "No items yet",
+    add_from_menu: "Add items from the menu",
+
+    // Payment
+    payment: "Payment",
+    payment_complete: "Payment Complete",
+    payment_method: "Payment Method",
+    amount_due: "Amount Due",
+    card: "Card",
+    cash: "Cash",
+    cash_received: "Cash Received",
+    change: "Change",
+    tap_insert_swipe: "Tap, insert, or swipe card",
+    scan_qr: "Scan",
+    processing: "Processing...",
+    confirm_payment: "Confirm Payment",
+    paid_via: "paid via",
+    done: "Done",
+    discount: "Discount",
+
+    // History
+    history: "History",
+    order_history: "Order History",
+    order_detail: "Order Detail",
+    no_history: "No completed orders yet",
+    cash_payment: "Cash Payment",
+    net_paid: "Net Paid",
+    all_methods: "All Methods",
+    all_modes: "All Modes",
+    promo: "Promo",
+    member: "Member",
+    split_bill: "Split",
+    enter_promo_code: "Enter promo code...",
+    apply: "Apply",
+    invalid_promo: "Invalid promo code",
+    member_discount_applied: "Member Discount",
+    split_into_n: "Split into",
+    each_pays: "Each pays",
+    per_person: "Per person",
+    promotions: "Promotions",
+  },
+  zh: {
+    tables: "桌位",
+    floor: "楼层",
+    menu: "菜单",
+    orders: "订单",
+    settings: "设置",
+    search: "搜索",
+    cancel: "取消",
+    confirm: "确认",
+    save: "保存",
+    delete: "删除",
+    back: "返回",
+    close: "关闭",
+    all: "全部",
+    
+    available: "空桌",
+    reserved: "已预定",
+    ordering: "点餐中",
+    ordered: "已下单",
+    dirty: "待清理",
+    cleaning: "清理中",
+    
+    transfer_table: "换桌",
+    merge_tables: "并桌",
+    split_table: "拆桌",
+    select_target: "选择目标桌位",
+    select_tables_to_merge: "选择要合并的桌位",
+    split_into: "拆分为",
+    transfer_from: "从",
+    merge_confirm: "确认合并",
+    cancel_action: "取消",
+    
+    main_hall: "大厅",
+    patio: "露台",
+    private: "包厢",
+    bar: "吧台",
+    
+    search_table: "搜索桌号...",
+    search_menu: "搜索菜品...",
+    popular: "热门",
+    combos: "套餐",
+    starters: "前菜",
+    mains: "主菜",
+    noodles: "面食",
+    rice: "饭类",
+    sides: "配菜",
+    desserts: "甜品",
+    beverages: "饮料",
+    alcohol: "酒类",
+    combo: "套餐",
+    includes: "包含",
+    select: "选择",
+    unavailable: "暂不供应",
+    sold_out: "已售罄",
+    add_to_order: "加入订单",
+    review_order: "查看订单",
+    items: "件",
+    
+    spice_level: "辣度",
+    required: "必选",
+    select_one: "单选",
+    select_multiple: "多选",
+    special_notes: "特别备注",
+    notes_placeholder: "例：不要洋葱，多加辣椒...",
+    
+    subtotal: "小计",
+    service_charge: "服务费",
+    gst: "消费税 9%",
+    total: "合计",
+    pay: "结账",
+    send_to_kitchen: "下单",
+    
+    dine_in: "堂食",
+    takeaway: "外带",
+    delivery: "外卖",
+    pickup: "自取",
+    takeaway_order: "外带订单",
+    delivery_order: "外卖订单",
+    
+    seats: "座",
+    guests: "位客人",
+    max_seats: "最多",
+    
+    light: "浅色",
+    dark: "深色",
+    language: "语言",
+    english: "English",
+    chinese: "中文",
+    
+    dashboard: "仪表盘",
+    staff: "员工",
+    crm: "客户管理",
+    kds_monitor: "出菜监控",
+    sales_report: "销售报表",
+    finance: "财务",
+    
+    flexible_combo: "自选套餐",
+    choose_your: "选择你的",
+    selected: "已选",
+    remaining: "待选",
+
+    select_table_start: "选择桌位开始",
+    no_items: "暂无菜品",
+    add_from_menu: "从菜单添加菜品",
+
+    payment: "支付",
+    payment_complete: "支付成功",
+    payment_method: "支付方式",
+    amount_due: "应付金额",
+    card: "银行卡",
+    cash: "现金",
+    cash_received: "收到现金",
+    change: "找零",
+    tap_insert_swipe: "请刷卡、插卡或感应",
+    scan_qr: "扫码",
+    processing: "处理中...",
+    confirm_payment: "确认支付",
+    paid_via: "通过",
+    done: "完成",
+    discount: "折扣",
+
+    history: "历史",
+    order_history: "交易历史",
+    order_detail: "交易详情",
+    no_history: "暂无已完成订单",
+    cash_payment: "现金支付",
+    net_paid: "实收金额",
+    all_methods: "全部方式",
+    all_modes: "全部模式",
+    promo: "优惠",
+    member: "会员",
+    split_bill: "拆分",
+    enter_promo_code: "输入优惠码...",
+    apply: "应用",
+    invalid_promo: "无效优惠码",
+    member_discount_applied: "会员折扣",
+    split_into_n: "拆分为",
+    each_pays: "每人支付",
+    per_person: "人均",
+    promotions: "营销活动",
+  },
+};
+
+interface LangContextType {
+  lang: Lang;
+  setLang: (l: Lang) => void;
+  t: (key: string) => string;
+}
+
+const LangContext = createContext<LangContextType>({
+  lang: "en",
+  setLang: () => {},
+  t: (k) => k,
+});
+
+export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [lang, setLang] = useState<Lang>("en");
+  const t = useCallback((key: string) => dict[lang]?.[key] || dict.en[key] || key, [lang]);
+  return <LangContext.Provider value={{ lang, setLang, t }}>{children}</LangContext.Provider>;
+};
+
+export const useLanguage = () => useContext(LangContext);
