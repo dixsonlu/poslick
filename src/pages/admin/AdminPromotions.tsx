@@ -107,6 +107,7 @@ const templates = [
 ];
 
 const AdminPromotions: React.FC = () => {
+  const [activeMainTab, setActiveMainTab] = useState("promotions");
   const [promos, setPromos] = useState(mockPromos);
   const [statusFilter, setStatusFilter] = useState<PromoStatus | "all">("all");
   const [search, setSearch] = useState("");
