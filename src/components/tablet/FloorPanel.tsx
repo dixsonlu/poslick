@@ -45,6 +45,9 @@ export const FloorPanel: React.FC<FloorPanelProps> = ({
   const [tableAction, setTableAction] = useState<TableAction>(null);
   const [mergeTargets, setMergeTargets] = useState<string[]>([]);
   const [splitCount, setSplitCount] = useState(2);
+  const [showReserveDialog, setShowReserveDialog] = useState(false);
+  const [reserveGuestCount, setReserveGuestCount] = useState(2);
+  const [reserveCustomerName, setReserveCustomerName] = useState("");
 
   const filteredTables = tables.filter(t => {
     if (activeZone !== "All" && t.zone !== activeZone) return false;
