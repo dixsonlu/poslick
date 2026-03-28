@@ -1,7 +1,17 @@
 import React, { useState } from "react";
-import { ArrowLeft, Calendar, ChevronRight, Copy, Gift, Plus, Search, Tag, ToggleLeft, ToggleRight, Users, Zap } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Calendar, ChevronRight, Clock, Copy, Gift, Plus, Search, Tag, ToggleLeft, ToggleRight, Trash2, Users, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { categories } from "@/data/mock-data";
+import {
+  usePricingStrategies,
+  addPricingStrategy,
+  updatePricingStrategy,
+  deletePricingStrategy,
+  detectConflicts,
+  type PricingStrategy,
+} from "@/state/pricing-store";
 
 // --- Types ---
 type PromoType = "discount" | "bogo" | "gift" | "coupon" | "loyalty" | "happy_hour";
