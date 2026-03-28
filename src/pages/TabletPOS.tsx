@@ -1,15 +1,16 @@
-import React, { useState, useCallback, useMemo } from "react";
-import { Receipt } from "lucide-react";
+import React, { useState, useCallback, useRef } from "react";
+import { Receipt, GripVertical } from "lucide-react";
 import { FloorPanel } from "@/components/tablet/FloorPanel";
 import { MenuComposer } from "@/components/tablet/MenuComposer";
 import { CheckPanel } from "@/components/tablet/CheckPanel";
 import { PaymentSheet } from "@/components/tablet/PaymentSheet";
 import { OrderHistory } from "@/components/tablet/OrderHistory";
 import type { PaidOrder } from "@/components/tablet/history/types";
-import { tables as mockTables, sampleOrders, menuItems, type Table, type Order, type OrderItem, type ServiceMode } from "@/data/mock-data";
+import { tables as mockTables, sampleOrders, type Table, type Order, type OrderItem, type ServiceMode } from "@/data/mock-data";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useLanguage } from "@/hooks/useLanguage";
 import { getMenuItemsSnapshot } from "@/state/menu-store";
+import { cn } from "@/lib/utils";
 
 // Generate 30 mock historical orders for demo
 const generateMockHistory = (): PaidOrder[] => {
@@ -61,6 +62,9 @@ const generateMockHistory = (): PaidOrder[] => {
   return result;
 };
 
+const MIN_PANEL_FRAC = 1 / 6;
+const MAX_PANEL_FRAC = 1 / 3;
+
 const TabletPOS: React.FC = () => {
   const { t } = useLanguage();
   const [tables, setTables] = useState(mockTables);
@@ -71,9 +75,44 @@ const TabletPOS: React.FC = () => {
   const [showHistory, setShowHistory] = useState(false);
   const [paidOrders, setPaidOrders] = useState<PaidOrder[]>(() => generateMockHistory());
   const [floorFullscreen, setFloorFullscreen] = useState(false);
-  const [tableManagement, setTableManagement] = useState(true); // QSR toggle
+  const [tableManagement, setTableManagement] = useState(true);
+
+  // Resizable panel widths (as fractions of screen width)
+  const [leftWidth, setLeftWidth] = useState(0.22); // ~288px on 1280 screen
+  const [rightWidth, setRightWidth] = useState(0.265); // ~340px on 1280 screen
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const selectedTable = tables.find(t => t.id === selectedTableId);
+
+  // --- Drag handle logic ---
+  const startDrag = useCallback((side: "left" | "right") => {
+    const onMove = (e: MouseEvent | TouchEvent) => {
+      if (!containerRef.current) return;
+      const rect = containerRef.current.getBoundingClientRect();
+      const clientX = "touches" in e ? e.touches[0].clientX : e.clientX;
+      if (side === "left") {
+        const frac = Math.min(MAX_PANEL_FRAC, Math.max(MIN_PANEL_FRAC, (clientX - rect.left) / rect.width));
+        setLeftWidth(frac);
+      } else {
+        const frac = Math.min(MAX_PANEL_FRAC, Math.max(MIN_PANEL_FRAC, (rect.right - clientX) / rect.width));
+        setRightWidth(frac);
+      }
+    };
+    const onUp = () => {
+      document.removeEventListener("mousemove", onMove);
+      document.removeEventListener("mouseup", onUp);
+      document.removeEventListener("touchmove", onMove);
+      document.removeEventListener("touchend", onUp);
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+    document.addEventListener("mousemove", onMove);
+    document.addEventListener("mouseup", onUp);
+    document.addEventListener("touchmove", onMove);
+    document.addEventListener("touchend", onUp);
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  }, []);
 
   const handleSelectTable = useCallback((tableId: string) => {
     setSelectedTableId(tableId);
@@ -99,10 +138,43 @@ const TabletPOS: React.FC = () => {
       setTables(prev => prev.map(t =>
         t.id === tableId ? { ...t, status: "ordering" as const, guestCount: 1, orderId: newOrder.id, elapsedMinutes: 0 } : t
       ));
+    } else if (table?.status === "reserved") {
+      // Reserved table selected — don't create order yet, just select
+      setCurrentOrder(null);
     } else {
       setCurrentOrder(null);
     }
   }, [tables, orders]);
+
+  // Seat reserved table guests
+  const handleSeatReserved = useCallback((tableId: string) => {
+    const table = tables.find(t => t.id === tableId);
+    if (!table || table.status !== "reserved") return;
+    const newOrder: Order = {
+      id: `o-${Date.now()}`,
+      tableId,
+      tableNumber: table.number,
+      serviceMode: "dine-in",
+      items: [],
+      status: "open",
+      guestCount: table.guestCount || 1,
+      createdAt: new Date().toISOString(),
+      subtotal: 0, serviceCharge: 0, gst: 0, total: 0,
+    };
+    setCurrentOrder(newOrder);
+    setOrders(prev => [...prev, newOrder]);
+    setTables(prev => prev.map(t =>
+      t.id === tableId ? { ...t, status: "ordering" as const, orderId: newOrder.id, elapsedMinutes: 0 } : t
+    ));
+  }, [tables]);
+
+  // Reserve an available table
+  const handleReserveTable = useCallback((tableId: string, guestCount: number, customerName?: string) => {
+    setTables(prev => prev.map(t =>
+      t.id === tableId ? { ...t, status: "reserved" as const, guestCount, reservationName: customerName } : t
+    ));
+    setCurrentOrder(null);
+  }, []);
 
   const handleCreateWalkIn = useCallback((mode: ServiceMode) => {
     const newOrder: Order = {
@@ -277,13 +349,40 @@ const TabletPOS: React.FC = () => {
     });
   }, []);
 
-  // When history is shown, replace CheckPanel with OrderHistory side panel
   const showCheckPanel = !showHistory;
 
   return (
-    <div className="flex h-screen bg-background overflow-hidden relative">
-      {/* Floor Panel — only when table management is enabled */}
-      {tableManagement && (
+    <div ref={containerRef} className="flex h-screen bg-background overflow-hidden relative">
+      {/* Floor Panel with drag handle */}
+      {tableManagement && !floorFullscreen && (
+        <>
+          <div style={{ width: `${leftWidth * 100}%` }} className="shrink-0 relative">
+            <FloorPanel
+              tables={tables}
+              selectedTableId={selectedTableId}
+              onSelectTable={handleSelectTable}
+              onCreateWalkIn={handleCreateWalkIn}
+              onTransferTable={handleTransferTable}
+              onMergeTables={handleMergeTables}
+              onSplitTable={handleSplitTable}
+              isFullscreen={false}
+              onToggleFullscreen={() => setFloorFullscreen(true)}
+              onSeatReserved={handleSeatReserved}
+              onReserveTable={handleReserveTable}
+            />
+          </div>
+          {/* Left drag handle */}
+          <div
+            className="w-3 shrink-0 flex items-center justify-center cursor-col-resize hover:bg-primary/10 transition-colors group z-10 border-r border-border"
+            onMouseDown={() => startDrag("left")}
+            onTouchStart={() => startDrag("left")}
+          >
+            <GripVertical className="h-5 w-5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+          </div>
+        </>
+      )}
+
+      {tableManagement && floorFullscreen && (
         <FloorPanel
           tables={tables}
           selectedTableId={selectedTableId}
@@ -292,8 +391,10 @@ const TabletPOS: React.FC = () => {
           onTransferTable={handleTransferTable}
           onMergeTables={handleMergeTables}
           onSplitTable={handleSplitTable}
-          isFullscreen={floorFullscreen}
-          onToggleFullscreen={() => setFloorFullscreen(f => !f)}
+          isFullscreen={true}
+          onToggleFullscreen={() => setFloorFullscreen(false)}
+          onSeatReserved={handleSeatReserved}
+          onReserveTable={handleReserveTable}
         />
       )}
 
@@ -304,46 +405,60 @@ const TabletPOS: React.FC = () => {
             selectedTable={selectedTable}
             currentOrder={currentOrder}
           />
-          {showCheckPanel ? (
-            <CheckPanel
-              order={currentOrder}
-              table={selectedTable}
-              onUpdateQuantity={handleUpdateQuantity}
-              onRemoveItem={handleRemoveItem}
-              onPay={() => setShowPayment(true)}
-            />
-          ) : (
-            <div className="w-[340px] shrink-0 border-l border-border">
-              <OrderHistory orders={paidOrders} onClose={() => setShowHistory(false)} />
+
+          {/* Right drag handle */}
+          <div
+            className="w-3 shrink-0 flex items-center justify-center cursor-col-resize hover:bg-primary/10 transition-colors group z-10 border-l border-border"
+            onMouseDown={() => startDrag("right")}
+            onTouchStart={() => startDrag("right")}
+          >
+            <GripVertical className="h-5 w-5 text-muted-foreground/40 group-hover:text-primary transition-colors" />
+          </div>
+
+          {/* Right panel: check or history */}
+          <div style={{ width: `${rightWidth * 100}%` }} className="shrink-0 flex flex-col">
+            {/* Top controls bar — History button + ThemeToggle aligned */}
+            <div className="flex items-center justify-end gap-2 px-3 py-2 border-b border-border bg-card shrink-0">
+              <button
+                onClick={() => setShowHistory(h => !h)}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 rounded-lg border-1.5 text-[11px] font-medium transition-colors min-h-[36px]",
+                  showHistory
+                    ? "bg-primary text-primary-foreground border-primary"
+                    : "bg-card border-border text-muted-foreground hover:bg-accent hover:text-foreground"
+                )}
+              >
+                <Receipt className="h-3.5 w-3.5" />
+                {t("history")}
+                {paidOrders.length > 0 && (
+                  <span className={cn(
+                    "text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center",
+                    showHistory ? "bg-primary-foreground text-primary" : "bg-primary text-primary-foreground"
+                  )}>
+                    {paidOrders.length}
+                  </span>
+                )}
+              </button>
+              <ThemeToggle />
             </div>
-          )}
+
+            {/* Panel content */}
+            <div className="flex-1 overflow-hidden">
+              {showCheckPanel ? (
+                <CheckPanel
+                  order={currentOrder}
+                  table={selectedTable}
+                  onUpdateQuantity={handleUpdateQuantity}
+                  onRemoveItem={handleRemoveItem}
+                  onPay={() => setShowPayment(true)}
+                />
+              ) : (
+                <OrderHistory orders={paidOrders} onClose={() => setShowHistory(false)} />
+              )}
+            </div>
+          </div>
         </>
       )}
-
-      {/* Top-right controls */}
-      <div className="absolute top-3 right-3 z-10 flex items-center gap-2">
-        <button
-          onClick={() => setShowHistory(h => !h)}
-          className={cn(
-            "flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border-1.5 text-[11px] font-medium transition-colors min-h-[44px]",
-            showHistory
-              ? "bg-primary text-primary-foreground border-primary"
-              : "bg-card border-border text-muted-foreground hover:bg-accent hover:text-foreground"
-          )}
-        >
-          <Receipt className="h-3.5 w-3.5" />
-          {t("history")}
-          {paidOrders.length > 0 && (
-            <span className={cn(
-              "text-[9px] font-bold px-1.5 py-0.5 rounded-full min-w-[18px] text-center",
-              showHistory ? "bg-primary-foreground text-primary" : "bg-primary text-primary-foreground"
-            )}>
-              {paidOrders.length}
-            </span>
-          )}
-        </button>
-        <ThemeToggle />
-      </div>
 
       {showPayment && currentOrder && (
         <PaymentSheet
@@ -355,10 +470,5 @@ const TabletPOS: React.FC = () => {
     </div>
   );
 };
-
-// Helper
-function cn(...classes: (string | boolean | undefined)[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default TabletPOS;
