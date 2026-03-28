@@ -289,7 +289,7 @@ export const menuItems: MenuItem[] = [
   { id: "m66", name: "Pandan Cake", nameZh: "班兰蛋糕", price: 5.00, category: "Desserts", available: true, image: pandanCakeImg },
 
   // Beverages
-  { id: "m22b", name: "Teh Tarik", nameZh: "拉茶", price: 2.50, category: "Beverages", available: true, popular: true, image: tehTarikImg },
+  { id: "m22", name: "Teh Tarik", nameZh: "拉茶", price: 2.50, category: "Beverages", available: true, popular: true, image: tehTarikImg },
   { id: "m23", name: "Kopi O", nameZh: "咖啡乌", price: 1.80, category: "Beverages", available: true, image: kopiOImg },
   { id: "m24", name: "Milo Dinosaur", nameZh: "美禄恐龙", price: 4.00, category: "Beverages", available: true, image: miloDinosaurImg },
   { id: "m25", name: "Lime Juice", nameZh: "酸柑水", price: 2.50, category: "Beverages", available: true, image: limeJuiceImg },

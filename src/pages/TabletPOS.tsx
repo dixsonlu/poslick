@@ -259,10 +259,9 @@ const TabletPOS: React.FC = () => {
 
   const paymentMethods = ["Visa", "Mastercard", "UnionPay", "Alipay", "WeChat Pay", "PayNow", "Cash"];
 
-  const handlePaymentComplete = useCallback((method?: string) => {
+  const handlePaymentComplete = useCallback((method?: string, cashReceived?: number) => {
     if (currentOrder) {
       const isCash = method === "Cash";
-      const cashReceived = isCash ? Math.ceil(currentOrder.total / 10) * 10 : undefined;
       const changeDue = isCash && cashReceived ? cashReceived - currentOrder.total : undefined;
 
       const paid: PaidOrder = {
@@ -280,7 +279,7 @@ const TabletPOS: React.FC = () => {
         total: currentOrder.total,
         paidAt: new Date().toISOString(),
         paymentMethod: method || paymentMethods[Math.floor(Math.random() * paymentMethods.length)],
-        cashReceived,
+        cashReceived: isCash ? cashReceived : undefined,
         changeDue,
       };
       setPaidOrders(prev => [paid, ...prev]);
@@ -306,8 +305,12 @@ const TabletPOS: React.FC = () => {
         return t;
       });
     });
-    if (currentOrder) {
+    // Update orders array to reflect new table association
+    if (currentOrder?.tableId === fromId) {
       const toTable = tables.find(t => t.id === toId);
+      setOrders(prev => prev.map(o =>
+        o.id === currentOrder.id ? { ...o, tableId: toId, tableNumber: toTable?.number } : o
+      ));
       setCurrentOrder(prev => prev ? { ...prev, tableId: toId, tableNumber: toTable?.number } : prev);
       setSelectedTableId(toId);
     }
