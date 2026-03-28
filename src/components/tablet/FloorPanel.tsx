@@ -39,7 +39,7 @@ export const FloorPanel: React.FC<FloorPanelProps> = ({
   isFullscreen, onToggleFullscreen,
   onSeatReserved, onReserveTable,
 }) => {
-  const { t } = useLanguage();
+  const { t, lang } = useLanguage();
   const [activeZone, setActiveZone] = useState<string>("All");
   const [searchQuery, setSearchQuery] = useState("");
   const [tableAction, setTableAction] = useState<TableAction>(null);
