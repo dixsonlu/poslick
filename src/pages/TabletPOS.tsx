@@ -376,11 +376,11 @@ const TabletPOS: React.FC = () => {
           </div>
           {/* Left drag handle */}
           <div
-            className="w-px shrink-0 bg-border cursor-col-resize relative z-10"
+            className="w-[2px] shrink-0 bg-primary cursor-col-resize relative z-10"
             onMouseDown={() => startDrag("left")}
             onTouchStart={() => startDrag("left")}
           >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-border hover:bg-primary transition-colors" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-primary/40 hover:bg-primary transition-colors" />
           </div>
         </>
       )}
@@ -411,11 +411,11 @@ const TabletPOS: React.FC = () => {
 
           {/* Right drag handle */}
           <div
-            className="w-px shrink-0 bg-border cursor-col-resize relative z-10"
+            className="w-[2px] shrink-0 bg-primary cursor-col-resize relative z-10"
             onMouseDown={() => startDrag("right")}
             onTouchStart={() => startDrag("right")}
           >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-border hover:bg-primary transition-colors" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-primary/40 hover:bg-primary transition-colors" />
           </div>
 
           {/* Right panel: check or history */}
