@@ -18,6 +18,10 @@ import AdminSales from "./pages/admin/AdminSales";
 import AdminFinance from "./pages/admin/AdminFinance";
 import AdminSettings from "./pages/admin/AdminSettings";
 import AdminPromotions from "./pages/admin/AdminPromotions";
+import AdminInventory from "./pages/admin/AdminInventory";
+import AdminFloorPlan from "./pages/admin/AdminFloorPlan";
+import AdminQueue from "./pages/admin/AdminQueue";
+import QueueKiosk from "./pages/QueueKiosk";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -34,6 +38,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/tablet" element={<TabletPOS />} />
               <Route path="/mobile" element={<MobilePOS />} />
+              <Route path="/queue" element={<QueueKiosk />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
                 <Route path="menu" element={<AdminMenu />} />
@@ -44,6 +49,9 @@ const App = () => (
                 <Route path="finance" element={<AdminFinance />} />
                 <Route path="settings" element={<AdminSettings />} />
                 <Route path="promotions" element={<AdminPromotions />} />
+                <Route path="inventory" element={<AdminInventory />} />
+                <Route path="floorplan" element={<AdminFloorPlan />} />
+                <Route path="queue" element={<AdminQueue />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -155,14 +155,25 @@
 }
 
 @layer components {
+  .pos-scrollbar {
+    scrollbar-width: none;
+  }
   .pos-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .pos-scrollbar:hover {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--border)) transparent;
+  }
+  .pos-scrollbar:hover::-webkit-scrollbar {
+    display: block;
     width: 4px;
     height: 4px;
   }
-  .pos-scrollbar::-webkit-scrollbar-track {
+  .pos-scrollbar:hover::-webkit-scrollbar-track {
     background: transparent;
   }
-  .pos-scrollbar::-webkit-scrollbar-thumb {
+  .pos-scrollbar:hover::-webkit-scrollbar-thumb {
     background: hsl(var(--border));
     border-radius: 2px;
   }

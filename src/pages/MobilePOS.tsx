@@ -15,10 +15,10 @@ const MobilePOS: React.FC = () => {
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
 
   const recalc = (items: OrderItem[]) => {
-    const subtotal = items.reduce((s, i) => s + (i.price + i.modifiers.reduce((ms, m) => ms + m.price, 0)) * i.quantity, 0);
-    const sc = subtotal * 0.1;
-    const gst = (subtotal + sc) * 0.09;
-    return { subtotal, serviceCharge: sc, gst, total: subtotal + sc + gst };
+    const subtotal = Math.round(items.reduce((s, i) => s + (i.price + i.modifiers.reduce((ms, m) => ms + m.price, 0)) * i.quantity, 0) * 100) / 100;
+    const sc = Math.round(subtotal * 0.1 * 100) / 100;
+    const gst = Math.round((subtotal + sc) * 0.09 * 100) / 100;
+    return { subtotal, serviceCharge: sc, gst, total: Math.round((subtotal + sc + gst) * 100) / 100 };
   };
 
   const handleSelectTable = (table: Table) => {
