@@ -192,13 +192,14 @@ const TabletPOS: React.FC = () => {
   }, []);
 
   const recalcOrder = (items: OrderItem[]): Pick<Order, "subtotal" | "serviceCharge" | "gst" | "total"> => {
-    const subtotal = items.reduce((sum, item) => {
+    const subtotal = Math.round(items.reduce((sum, item) => {
       const modTotal = item.modifiers.reduce((ms, m) => ms + m.price, 0);
       return sum + (item.price + modTotal) * item.quantity;
-    }, 0);
-    const serviceCharge = subtotal * 0.1;
-    const gst = (subtotal + serviceCharge) * 0.09;
-    return { subtotal, serviceCharge, gst, total: subtotal + serviceCharge + gst };
+    }, 0) * 100) / 100;
+    const serviceCharge = Math.round(subtotal * 0.1 * 100) / 100;
+    const gst = Math.round((subtotal + serviceCharge) * 0.09 * 100) / 100;
+    const total = Math.round((subtotal + serviceCharge + gst) * 100) / 100;
+    return { subtotal, serviceCharge, gst, total };
   };
 
   const handleAddItem = useCallback((menuItemId: string, modifiers: { name: string; price: number }[], notes?: string, comboItems?: { name: string; groupName: string }[]) => {
