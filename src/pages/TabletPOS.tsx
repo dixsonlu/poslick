@@ -376,11 +376,12 @@ const TabletPOS: React.FC = () => {
           </div>
           {/* Left drag handle */}
           <div
-            className="w-[2px] shrink-0 bg-primary cursor-col-resize relative z-10"
+            className="group w-[2px] shrink-0 bg-border cursor-col-resize relative z-10 hover:bg-border"
             onMouseDown={() => startDrag("left")}
             onTouchStart={() => startDrag("left")}
           >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-primary/40 hover:bg-primary transition-colors" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-border/60 group-hover:bg-primary transition-colors duration-200" />
           </div>
         </>
       )}
@@ -411,17 +412,18 @@ const TabletPOS: React.FC = () => {
 
           {/* Right drag handle */}
           <div
-            className="w-[2px] shrink-0 bg-primary cursor-col-resize relative z-10"
+            className="group w-[2px] shrink-0 bg-border cursor-col-resize relative z-10 hover:bg-border"
             onMouseDown={() => startDrag("right")}
             onTouchStart={() => startDrag("right")}
           >
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-primary/40 hover:bg-primary transition-colors" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-1.5 h-10 rounded-full bg-border/60 group-hover:bg-primary transition-colors duration-200" />
           </div>
 
           {/* Right panel: check or history */}
           <div style={{ width: `${rightWidth * 100}%` }} className="shrink-0 flex flex-col">
             {/* Top controls bar — History button + ThemeToggle aligned */}
-            <div className="flex items-center justify-end gap-2 px-3 py-2.5 border-b border-border bg-card shrink-0">
+            <div className="h-[52px] flex items-center justify-end gap-2 px-3 border-b border-border bg-card shrink-0">
               <button
                 onClick={() => setShowHistory(h => !h)}
                 className={cn(
