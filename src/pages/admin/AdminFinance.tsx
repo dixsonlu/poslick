@@ -69,8 +69,8 @@ const AdminFinance: React.FC = () => {
   if (viewMode === "detail") {
     const d = settlementDetail;
     return (
-      <div className="p-7">
-        <button onClick={() => setViewMode("overview")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-[13px] mb-5 transition-colors">
+      <div className="p-8">
+        <button onClick={() => setViewMode("overview")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-[13px] mb-5 transition-colors duration-150">
           <ArrowLeft className="h-4 w-4" /> Back to Finance
         </button>
 
