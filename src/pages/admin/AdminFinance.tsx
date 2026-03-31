@@ -234,7 +234,7 @@ const AdminFinance: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-6 mb-8">
         {/* Tender Mix */}
         <div className="uniweb-card p-5">
           <div className="section-label mb-4">Payment Method Mix</div>
