@@ -216,16 +216,15 @@ const AdminFinance: React.FC = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-6 mb-8">
         {[
-          { label: "Monthly Gross", value: "$489,630.50", stripe: "bg-primary", sub: "+8.2% vs Dec", trend: "up" },
-          { label: "Net Settled", value: "$481,768.40", stripe: "bg-status-green", sub: "31 batches", trend: "up" },
-          { label: "Total Fees", value: "$7,862.10", stripe: "bg-destructive", sub: "MDR 1.61%", trend: "down" },
-          { label: "GST Collected", value: "$40,231.45", stripe: "bg-status-amber", sub: "IRAS compliant", trend: "up" },
+          { label: "Monthly Gross", value: "$489,630.50", sub: "+8.2% vs Dec", trend: "up" },
+          { label: "Net Settled", value: "$481,768.40", sub: "31 batches", trend: "up" },
+          { label: "Total Fees", value: "$7,862.10", sub: "MDR 1.61%", trend: "down" },
+          { label: "GST Collected", value: "$40,231.45", sub: "IRAS compliant", trend: "up" },
         ].map(s => (
-          <div key={s.label} className="uniweb-card relative overflow-hidden p-5">
-            <div className={`kpi-stripe ${s.stripe}`} />
-            <div className="section-label mt-1.5 mb-2.5">{s.label}</div>
+          <div key={s.label} className="uniweb-card p-5">
+            <div className="section-label mb-2.5">{s.label}</div>
             <div className="text-[22px] font-bold text-foreground tracking-tighter leading-none font-mono">{s.value}</div>
             <div className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5">
               {s.trend === "up" ? <TrendingUp className="h-3 w-3 text-status-green" /> : <TrendingDown className="h-3 w-3 text-destructive" />}
