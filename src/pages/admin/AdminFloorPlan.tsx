@@ -74,7 +74,7 @@ const AdminFloorPlan: React.FC = () => {
       </div>
 
       {/* Zone Tabs */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-1 mb-6 bg-accent rounded-lg p-0.5 w-fit">
         {zones.map(z => (
           <button
             key={z.id}
