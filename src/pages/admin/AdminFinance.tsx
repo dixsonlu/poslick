@@ -202,8 +202,8 @@ const AdminFinance: React.FC = () => {
     <div className="p-8">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-xl font-bold text-foreground tracking-tight">Finance & Reconciliation</h1>
-          <p className="text-[13px] text-muted-foreground mt-1">Settlement tracking, tender mix, and GST reporting</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Finance & Reconciliation</h1>
+          <p className="text-sm text-muted-foreground mt-1">Settlement tracking, tender mix, and GST reporting</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="gap-1.5 text-[12px]">
