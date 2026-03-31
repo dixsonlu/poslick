@@ -35,45 +35,39 @@ const AdminCRM: React.FC = () => {
   });
 
   return (
-    <div className="p-7">
-      <div className="mb-6">
+    <div className="p-8">
+      <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground tracking-tight">Customer Management</h1>
-        <p className="text-[13px] text-muted-foreground mt-1">{customers.length} customers</p>
+        <p className="text-sm text-muted-foreground mt-1">{customers.length} customers</p>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="uniweb-card p-4 relative overflow-hidden">
-          <div className="kpi-stripe bg-primary" />
-          <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Total Customers</div>
-          <div className="text-2xl font-bold text-foreground mt-1">{customers.length}</div>
-        </div>
-        <div className="uniweb-card p-4 relative overflow-hidden">
-          <div className="kpi-stripe bg-status-green" />
-          <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Total Revenue</div>
-          <div className="text-2xl font-bold text-foreground mt-1 font-mono">${totalSpent.toLocaleString()}</div>
-        </div>
-        <div className="uniweb-card p-4 relative overflow-hidden">
-          <div className="kpi-stripe bg-status-amber" />
-          <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Avg Order Value</div>
-          <div className="text-2xl font-bold text-foreground mt-1 font-mono">${avgOrderVal.toFixed(2)}</div>
-        </div>
-        <div className="uniweb-card p-4 relative overflow-hidden">
-          <div className="kpi-stripe bg-status-red" />
-          <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">At Risk</div>
-          <div className="text-2xl font-bold text-destructive mt-1">{segmentCounts.at_risk}</div>
-        </div>
+      <div className="grid grid-cols-4 gap-6 mb-8">
+        {[
+          { label: "Total Customers", value: customers.length, icon: Users },
+          { label: "Total Revenue", value: `$${totalSpent.toLocaleString()}`, icon: TrendingUp, mono: true },
+          { label: "Avg Order Value", value: `$${avgOrderVal.toFixed(2)}`, icon: Star, mono: true },
+          { label: "At Risk", value: segmentCounts.at_risk, icon: AlertTriangle, danger: true },
+        ].map(s => (
+          <div key={s.label} className="uniweb-card p-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="section-label">{s.label}</span>
+              <s.icon className="h-4 w-4 text-muted-foreground/40" />
+            </div>
+            <div className={cn("text-[28px] font-bold tracking-tighter leading-none", s.danger ? "text-destructive" : "text-foreground", s.mono && "font-mono")}>{s.value}</div>
+          </div>
+        ))}
       </div>
 
       {/* Segment Filters */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-1 mb-6 bg-accent rounded-lg p-0.5 w-fit">
         {[{ key: "all", label: "All" }, ...Object.entries(segmentStyles).map(([k, v]) => ({ key: k, label: v.label }))].map(seg => (
           <button
             key={seg.key}
             onClick={() => setSegmentFilter(seg.key)}
             className={cn(
-              "px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors",
-              segmentFilter === seg.key ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent"
+              "px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-150",
+              segmentFilter === seg.key ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             )}
           >
             {seg.label}
@@ -87,7 +81,7 @@ const AdminCRM: React.FC = () => {
         <div className="flex-1">
           <div className="relative w-64 mb-4">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search customers..." className="w-full h-10 pl-10 pr-4 rounded-[9px] bg-card border-[1.5px] border-border text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 transition-all" />
+            <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search customers..." className="w-full h-10 pl-10 pr-4 rounded-xl bg-card border border-border text-[13px] text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary focus:ring-[3px] focus:ring-primary/10 transition-all" />
           </div>
 
           <div className="space-y-2">
@@ -98,8 +92,8 @@ const AdminCRM: React.FC = () => {
                   key={c.id}
                   onClick={() => setSelectedCustomer(c)}
                   className={cn(
-                    "uniweb-card p-4 w-full text-left transition-all hover:border-primary/30 cursor-pointer",
-                    selectedCustomer?.id === c.id && "border-primary ring-2 ring-primary/10"
+                    "uniweb-card p-4 w-full text-left transition-all duration-150 cursor-pointer",
+                    selectedCustomer?.id === c.id ? "border-primary ring-2 ring-primary/10 shadow-md" : "hover:shadow-md hover:border-primary/20"
                   )}
                 >
                   <div className="flex items-center justify-between mb-2">
@@ -127,7 +121,7 @@ const AdminCRM: React.FC = () => {
             <div className="uniweb-card p-5 sticky top-4">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="text-[15px] font-bold text-foreground">{selectedCustomer.name}</h3>
-                <button onClick={() => setSelectedCustomer(null)} className="p-1 rounded hover:bg-accent"><X className="h-4 w-4 text-muted-foreground" /></button>
+                <button onClick={() => setSelectedCustomer(null)} className="p-1 rounded hover:bg-accent transition-colors duration-150"><X className="h-4 w-4 text-muted-foreground" /></button>
               </div>
 
               <div className="space-y-3 text-[13px]">
@@ -137,18 +131,18 @@ const AdminCRM: React.FC = () => {
               </div>
 
               <div className="grid grid-cols-2 gap-3 mt-4 pt-4 border-t border-border">
-                <div><div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Visits</div><div className="text-lg font-bold text-foreground">{selectedCustomer.visits}</div></div>
-                <div><div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Points</div><div className="text-lg font-bold text-foreground">{selectedCustomer.points}</div></div>
-                <div><div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Total Spent</div><div className="text-lg font-bold text-foreground font-mono">${selectedCustomer.totalSpent.toLocaleString()}</div></div>
-                <div><div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Avg Order</div><div className="text-lg font-bold text-foreground font-mono">${selectedCustomer.avgOrderValue.toFixed(2)}</div></div>
+                <div><div className="section-label mb-1">Visits</div><div className="text-lg font-bold text-foreground">{selectedCustomer.visits}</div></div>
+                <div><div className="section-label mb-1">Points</div><div className="text-lg font-bold text-foreground">{selectedCustomer.points}</div></div>
+                <div><div className="section-label mb-1">Total Spent</div><div className="text-lg font-bold text-foreground font-mono">${selectedCustomer.totalSpent.toLocaleString()}</div></div>
+                <div><div className="section-label mb-1">Avg Order</div><div className="text-lg font-bold text-foreground font-mono">${selectedCustomer.avgOrderValue.toFixed(2)}</div></div>
               </div>
 
               {selectedCustomer.tags && selectedCustomer.tags.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-border">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">Tags</div>
+                  <div className="section-label mb-2">Tags</div>
                   <div className="flex flex-wrap gap-1.5">
                     {selectedCustomer.tags.map(tag => (
-                      <span key={tag} className="px-2 py-0.5 rounded-md bg-accent text-[11px] text-muted-foreground">{tag}</span>
+                      <span key={tag} className="px-2 py-0.5 rounded-full bg-accent text-[11px] text-muted-foreground">{tag}</span>
                     ))}
                   </div>
                 </div>
@@ -156,7 +150,7 @@ const AdminCRM: React.FC = () => {
 
               {selectedCustomer.notes && (
                 <div className="mt-4 pt-4 border-t border-border">
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">Notes</div>
+                  <div className="section-label mb-1">Notes</div>
                   <p className="text-[12px] text-muted-foreground">{selectedCustomer.notes}</p>
                 </div>
               )}

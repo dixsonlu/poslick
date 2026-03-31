@@ -80,8 +80,8 @@ const AdminFloorPlan: React.FC = () => {
             key={z.id}
             onClick={() => { setActiveZone(z.name); setSelectedId(null); }}
             className={cn(
-              "px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors",
-              activeZone === z.name ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent"
+              "px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-150",
+              activeZone === z.name ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             )}
           >
             {z.name} ({tables.filter(t => t.zone === z.name).length})
