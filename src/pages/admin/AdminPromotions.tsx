@@ -133,8 +133,8 @@ const AdminPromotions: React.FC = () => {
   if (selected) {
     const cfg = typeConfig[selected.type];
     return (
-      <div className="w-full p-6 lg:p-8">
-        <button onClick={() => setSelectedId(null)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-[13px] mb-6 transition-colors">
+      <div className="w-full p-8">
+        <button onClick={() => setSelectedId(null)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-[13px] mb-6 transition-colors duration-150">
           <ArrowLeft className="h-4 w-4" /> Back to Promotions
         </button>
 
