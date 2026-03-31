@@ -111,16 +111,15 @@ const AdminFinance: React.FC = () => {
         </div>
 
         {/* KPIs */}
-        <div className="grid grid-cols-4 gap-4 my-6">
+        <div className="grid grid-cols-4 gap-6 my-6">
           {[
-            { label: "Gross Volume", value: `$${d.kpis.grossVolume.toLocaleString()}`, stripe: "bg-primary", sub: `${d.kpis.txnCount} transactions` },
-            { label: "Total Fees", value: `$${d.kpis.totalFees.toFixed(2)}`, stripe: "bg-destructive", sub: `MDR ${(d.kpis.totalFees / d.kpis.grossVolume * 100).toFixed(2)}%` },
-            { label: "Net Payout", value: `$${d.kpis.netPayout.toLocaleString()}`, stripe: "bg-status-green", sub: `To DBS ${d.account}` },
-            { label: "Refunds", value: `$${d.kpis.refunds.toFixed(2)}`, stripe: "bg-status-amber", sub: `${(d.kpis.refunds / d.kpis.grossVolume * 100).toFixed(3)}% of GMV` },
+            { label: "Gross Volume", value: `$${d.kpis.grossVolume.toLocaleString()}`, sub: `${d.kpis.txnCount} transactions` },
+            { label: "Total Fees", value: `$${d.kpis.totalFees.toFixed(2)}`, sub: `MDR ${(d.kpis.totalFees / d.kpis.grossVolume * 100).toFixed(2)}%` },
+            { label: "Net Payout", value: `$${d.kpis.netPayout.toLocaleString()}`, sub: `To DBS ${d.account}` },
+            { label: "Refunds", value: `$${d.kpis.refunds.toFixed(2)}`, sub: `${(d.kpis.refunds / d.kpis.grossVolume * 100).toFixed(3)}% of GMV` },
           ].map(s => (
-            <div key={s.label} className="uniweb-card relative overflow-hidden p-4">
-              <div className={`kpi-stripe ${s.stripe}`} />
-              <div className="section-label mt-1 mb-2">{s.label}</div>
+            <div key={s.label} className="uniweb-card p-4">
+              <div className="section-label mb-2">{s.label}</div>
               <div className="text-xl font-bold text-foreground tracking-tighter leading-none font-mono">{s.value}</div>
               <div className="text-[10px] text-muted-foreground mt-1">{s.sub}</div>
             </div>
