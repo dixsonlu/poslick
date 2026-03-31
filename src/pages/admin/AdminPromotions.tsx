@@ -326,21 +326,18 @@ const PromotionsListView: React.FC<{
 }> = ({ filtered, statusFilter, setStatusFilter, search, setSearch, totalActive, totalGMV, totalUsage, toggleStatus, setSelectedId }) => (
   <>
     {/* KPI cards */}
-    <div className="grid gap-4 md:grid-cols-3 mb-6">
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-status-green" />
-        <div className="section-label mt-1.5 mb-2">Active Campaigns</div>
-        <div className="text-2xl font-bold text-foreground">{totalActive}</div>
+    <div className="grid gap-6 md:grid-cols-3 mb-8">
+      <div className="uniweb-card p-5">
+        <div className="section-label mb-2">Active Campaigns</div>
+        <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none">{totalActive}</div>
       </div>
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-primary" />
-        <div className="section-label mt-1.5 mb-2">Total GMV</div>
-        <div className="text-2xl font-bold text-foreground">${totalGMV.toLocaleString()}</div>
+      <div className="uniweb-card p-5">
+        <div className="section-label mb-2">Total GMV</div>
+        <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none font-mono">${totalGMV.toLocaleString()}</div>
       </div>
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-status-amber" />
-        <div className="section-label mt-1.5 mb-2">Total Usage</div>
-        <div className="text-2xl font-bold text-foreground">{totalUsage}</div>
+      <div className="uniweb-card p-5">
+        <div className="section-label mb-2">Total Usage</div>
+        <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none">{totalUsage}</div>
       </div>
     </div>
 
