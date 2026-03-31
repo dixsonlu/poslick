@@ -1,5 +1,5 @@
 import React from "react";
-import { TrendingUp } from "lucide-react";
+import { TrendingUp, DollarSign, ShoppingBag, Hash } from "lucide-react";
 
 const dailyData = [
   { day: "Mon", sales: 1820 },
@@ -22,22 +22,24 @@ const topItems = [
 const maxSales = Math.max(...dailyData.map(d => d.sales));
 
 const AdminSales: React.FC = () => (
-  <div className="p-7">
-    <div className="mb-6">
+  <div className="p-8">
+    <div className="mb-8">
       <h1 className="text-2xl font-bold text-foreground tracking-tight">Sales Report</h1>
-      <p className="text-[13px] text-muted-foreground mt-1">This week's performance</p>
+      <p className="text-sm text-muted-foreground mt-1">This week's performance</p>
     </div>
 
-    <div className="grid grid-cols-3 gap-4 mb-6">
+    <div className="grid grid-cols-3 gap-6 mb-8">
       {[
-        { label: "Total Revenue", value: "$17,997", change: "+8.3%", stripe: "bg-status-green" },
-        { label: "Orders", value: "312", change: "+5.1%", stripe: "bg-primary" },
-        { label: "Avg Order Value", value: "$57.68", change: "+3.0%", stripe: "bg-status-amber" },
+        { label: "Total Revenue", value: "$17,997", change: "+8.3%", icon: DollarSign },
+        { label: "Orders", value: "312", change: "+5.1%", icon: ShoppingBag },
+        { label: "Avg Order Value", value: "$57.68", change: "+3.0%", icon: Hash },
       ].map(s => (
-        <div key={s.label} className="uniweb-card relative overflow-hidden p-5">
-          <div className={`kpi-stripe ${s.stripe}`} />
-          <div className="section-label mt-1.5 mb-2.5">{s.label}</div>
-          <div className="text-[26px] font-bold text-foreground tracking-tighter leading-none mb-2">{s.value}</div>
+        <div key={s.label} className="uniweb-card p-5">
+          <div className="flex items-center justify-between mb-3">
+            <span className="section-label">{s.label}</span>
+            <s.icon className="h-4 w-4 text-muted-foreground/40" />
+          </div>
+          <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none mb-2">{s.value}</div>
           <span className="status-badge bg-status-green-light text-status-green">
             <TrendingUp className="h-3 w-3" />
             {s.change}
@@ -46,7 +48,7 @@ const AdminSales: React.FC = () => (
       ))}
     </div>
 
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-6">
       {/* Chart */}
       <div className="uniweb-card p-5">
         <div className="text-sm font-semibold text-foreground mb-4">Daily Sales</div>
@@ -69,7 +71,7 @@ const AdminSales: React.FC = () => (
         <div className="space-y-3">
           {topItems.map((item, i) => (
             <div key={item.name} className="flex items-center gap-3">
-              <span className={`w-6 h-6 rounded-md flex items-center justify-center text-[11px] font-bold ${
+              <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold ${
                 i === 0 ? "bg-primary text-primary-foreground" : i < 3 ? "bg-foreground text-background" : "bg-accent text-muted-foreground"
               }`}>
                 {i + 1}
