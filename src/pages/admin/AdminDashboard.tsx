@@ -2,10 +2,10 @@ import React from "react";
 import { TrendingUp, TrendingDown, DollarSign, Users, ShoppingBag, Clock } from "lucide-react";
 
 const stats = [
-  { label: "Today's Revenue", value: "$2,847.50", change: "+12.5%", up: true, icon: DollarSign, stripe: "bg-status-green" },
-  { label: "Total Orders", value: "48", change: "+8", up: true, icon: ShoppingBag, stripe: "bg-primary" },
-  { label: "Unique Customers", value: "92", change: "+15", up: true, icon: Users, stripe: "bg-status-amber" },
-  { label: "Avg Wait Time", value: "12 min", change: "-2 min", up: true, icon: Clock, stripe: "bg-status-red" },
+  { label: "Today's Revenue", value: "$2,847.50", change: "+12.5%", up: true, icon: DollarSign },
+  { label: "Total Orders", value: "48", change: "+8", up: true, icon: ShoppingBag },
+  { label: "Unique Customers", value: "92", change: "+15", up: true, icon: Users },
+  { label: "Avg Wait Time", value: "12 min", change: "-2 min", up: true, icon: Clock },
 ];
 
 const recentOrders = [
@@ -17,19 +17,21 @@ const recentOrders = [
 ];
 
 const AdminDashboard: React.FC = () => (
-  <div className="p-7">
-    <div className="mb-6">
+  <div className="p-8">
+    <div className="mb-8">
       <h1 className="text-2xl font-bold text-foreground tracking-tight">Dashboard</h1>
-      <p className="text-[13px] text-muted-foreground mt-1">Today's overview · Song Fa Bak Kut Teh</p>
+      <p className="text-sm text-muted-foreground mt-1">Today's overview · Song Fa Bak Kut Teh</p>
     </div>
 
     {/* KPI Cards */}
-    <div className="grid grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-4 gap-6 mb-8">
       {stats.map(s => (
-        <div key={s.label} className="uniweb-card relative overflow-hidden p-5">
-          <div className={`kpi-stripe ${s.stripe}`} />
-          <div className="section-label mt-1.5 mb-2.5">{s.label}</div>
-          <div className="text-[26px] font-bold text-foreground tracking-tighter leading-none mb-2">{s.value}</div>
+        <div key={s.label} className="uniweb-card p-5">
+          <div className="flex items-center justify-between mb-3">
+            <span className="section-label">{s.label}</span>
+            <s.icon className="h-4 w-4 text-muted-foreground/40" />
+          </div>
+          <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none mb-2">{s.value}</div>
           <div className="flex items-center gap-1.5">
             {s.up ? (
               <span className="status-badge bg-status-green-light text-status-green">
@@ -42,7 +44,7 @@ const AdminDashboard: React.FC = () => (
                 {s.change}
               </span>
             )}
-            <span className="text-[12px] text-muted-foreground">vs last week</span>
+            <span className="text-[11px] text-muted-foreground">vs last week</span>
           </div>
         </div>
       ))}
@@ -66,14 +68,14 @@ const AdminDashboard: React.FC = () => (
               <th>Time</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="divide-y divide-border">
             {recentOrders.map(o => (
-              <tr key={o.id} className="table-row border-b border-border last:border-0 hover:bg-accent transition-colors cursor-pointer">
-                <td className="font-medium text-foreground font-mono text-xs">{o.id}</td>
-                <td className="text-muted-foreground">{o.table}</td>
-                <td className="text-muted-foreground">{o.items}</td>
-                <td className="font-semibold text-foreground font-mono">{o.total}</td>
-                <td>
+              <tr key={o.id} className="hover:bg-muted/50 transition-colors duration-150 cursor-pointer">
+                <td className="px-4 py-3 font-medium text-foreground font-mono text-xs">{o.id}</td>
+                <td className="px-4 py-3 text-muted-foreground text-[13px]">{o.table}</td>
+                <td className="px-4 py-3 text-muted-foreground text-[13px]">{o.items}</td>
+                <td className="px-4 py-3 font-semibold text-foreground font-mono text-[13px]">{o.total}</td>
+                <td className="px-4 py-3">
                   <span className={`status-badge ${
                     o.status === "open"
                       ? "bg-status-amber-light text-status-amber"
@@ -83,7 +85,7 @@ const AdminDashboard: React.FC = () => (
                     {o.status === "open" ? "Open" : "Settled"}
                   </span>
                 </td>
-                <td className="text-muted-foreground text-xs">{o.time}</td>
+                <td className="px-4 py-3 text-muted-foreground text-xs">{o.time}</td>
               </tr>
             ))}
           </tbody>

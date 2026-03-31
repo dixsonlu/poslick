@@ -32,73 +32,63 @@ const AdminQueue: React.FC = () => {
     setShowAddForm(false);
   };
 
-  const handleCallNext = () => {
-    callNext();
-  };
-
   const getWaitMinutes = (joinedAt: string) => {
     return Math.round((Date.now() - new Date(joinedAt).getTime()) / 60000);
   };
 
   return (
-    <div className="p-7">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-8">
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground tracking-tight">Queue Management</h1>
-          <p className="text-[13px] text-muted-foreground mt-1">{waitingCount} parties waiting</p>
+          <p className="text-sm text-muted-foreground mt-1">{waitingCount} parties waiting</p>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" onClick={handleCallNext} disabled={waitingCount === 0}>
+          <Button variant="outline" onClick={() => callNext()} disabled={waitingCount === 0}>
             <Bell className="h-4 w-4 mr-2" />Call Next
           </Button>
-          <Button onClick={() => setShowAddForm(true)}>
+          <Button className="shadow-sm" onClick={() => setShowAddForm(true)}>
             <Plus className="h-4 w-4 mr-2" />Walk-in
           </Button>
         </div>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
-        <div className="uniweb-card p-4 relative overflow-hidden">
-          <div className="kpi-stripe bg-status-amber" />
-          <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Waiting</div>
-          <div className="text-2xl font-bold text-foreground mt-1">{waitingCount}</div>
-        </div>
-        <div className="uniweb-card p-4 relative overflow-hidden">
-          <div className="kpi-stripe bg-primary" />
-          <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Called</div>
-          <div className="text-2xl font-bold text-foreground mt-1">{queue.filter(q => q.status === "called").length}</div>
-        </div>
-        <div className="uniweb-card p-4 relative overflow-hidden">
-          <div className="kpi-stripe bg-status-green" />
-          <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Seated Today</div>
-          <div className="text-2xl font-bold text-foreground mt-1">{queue.filter(q => q.status === "seated").length}</div>
-        </div>
-        <div className="uniweb-card p-4 relative overflow-hidden">
-          <div className="kpi-stripe bg-status-blue" />
-          <div className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">Avg Wait</div>
-          <div className="text-2xl font-bold text-foreground mt-1">{avgWait} min</div>
-        </div>
+      <div className="grid grid-cols-4 gap-6 mb-8">
+        {[
+          { label: "Waiting", value: waitingCount, icon: Clock },
+          { label: "Called", value: queue.filter(q => q.status === "called").length, icon: Bell },
+          { label: "Seated Today", value: queue.filter(q => q.status === "seated").length, icon: Check },
+          { label: "Avg Wait", value: `${avgWait} min`, icon: Clock },
+        ].map(s => (
+          <div key={s.label} className="uniweb-card p-5">
+            <div className="flex items-center justify-between mb-3">
+              <span className="section-label">{s.label}</span>
+              <s.icon className="h-4 w-4 text-muted-foreground/40" />
+            </div>
+            <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none">{s.value}</div>
+          </div>
+        ))}
       </div>
 
       {/* Add Walk-in Form */}
       {showAddForm && (
         <div className="uniweb-card p-5 mb-6">
-          <h3 className="text-[13px] font-semibold text-foreground mb-3">Add Walk-in</h3>
+          <h3 className="text-sm font-semibold text-foreground mb-3">Add Walk-in</h3>
           <div className="flex items-end gap-3">
             <div className="flex-1">
-              <label className="text-[11px] text-muted-foreground">Party Name</label>
-              <input value={newName} onChange={e => setNewName(e.target.value)} className="w-full h-9 px-3 rounded-[9px] border border-border text-[13px] bg-background mt-0.5" placeholder="Name..." />
+              <label className="section-label">Party Name</label>
+              <input value={newName} onChange={e => setNewName(e.target.value)} className="w-full h-9 px-3 rounded-xl border border-border text-[13px] bg-background mt-1" placeholder="Name..." />
             </div>
             <div className="w-24">
-              <label className="text-[11px] text-muted-foreground">Party Size</label>
-              <input type="number" min={1} value={newSize} onChange={e => setNewSize(parseInt(e.target.value) || 1)} className="w-full h-9 px-3 rounded-[9px] border border-border text-[13px] bg-background mt-0.5" />
+              <label className="section-label">Party Size</label>
+              <input type="number" min={1} value={newSize} onChange={e => setNewSize(parseInt(e.target.value) || 1)} className="w-full h-9 px-3 rounded-xl border border-border text-[13px] bg-background mt-1" />
             </div>
             <div className="w-40">
-              <label className="text-[11px] text-muted-foreground">Phone (optional)</label>
-              <input value={newPhone} onChange={e => setNewPhone(e.target.value)} className="w-full h-9 px-3 rounded-[9px] border border-border text-[13px] bg-background mt-0.5" placeholder="+65..." />
+              <label className="section-label">Phone (optional)</label>
+              <input value={newPhone} onChange={e => setNewPhone(e.target.value)} className="w-full h-9 px-3 rounded-xl border border-border text-[13px] bg-background mt-1" placeholder="+65..." />
             </div>
-            <Button onClick={handleAdd} className="h-9">Add</Button>
+            <Button onClick={handleAdd} className="h-9 shadow-sm">Add</Button>
             <Button variant="ghost" onClick={() => setShowAddForm(false)} className="h-9"><X className="h-4 w-4" /></Button>
           </div>
         </div>
@@ -107,12 +97,12 @@ const AdminQueue: React.FC = () => {
       <div className="grid grid-cols-2 gap-6">
         {/* Active Queue */}
         <div>
-          <h2 className="section-label mb-3">Active Queue</h2>
+          <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">Active Queue</h2>
           <div className="space-y-2">
             {activeQueue.length === 0 ? (
               <div className="uniweb-card p-8 text-center">
                 <Users className="h-8 w-8 text-muted-foreground/20 mx-auto mb-2" />
-                <p className="text-[13px] text-muted-foreground">No parties in queue</p>
+                <p className="text-sm text-muted-foreground">No parties in queue</p>
               </div>
             ) : (
               activeQueue.map(entry => {
@@ -136,12 +126,12 @@ const AdminQueue: React.FC = () => {
                     </div>
                     <div className="flex gap-1.5 mt-3">
                       {entry.status === "waiting" && (
-                        <Button size="sm" variant="default" onClick={() => callNext()} className="h-7 text-[11px]">
+                        <Button size="sm" variant="default" onClick={() => callNext()} className="h-7 text-[11px] shadow-sm">
                           <Bell className="h-3 w-3 mr-1" />Call
                         </Button>
                       )}
                       {entry.status === "called" && (
-                        <Button size="sm" variant="default" onClick={() => seatEntry(entry.id)} className="h-7 text-[11px] bg-status-green hover:bg-status-green/80">
+                        <Button size="sm" variant="default" onClick={() => seatEntry(entry.id)} className="h-7 text-[11px] bg-status-green hover:bg-status-green/80 shadow-sm">
                           <Check className="h-3 w-3 mr-1" />Seat
                         </Button>
                       )}
@@ -158,7 +148,7 @@ const AdminQueue: React.FC = () => {
 
         {/* History */}
         <div>
-          <h2 className="section-label mb-3">Today's History</h2>
+          <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-3">Today's History</h2>
           <div className="space-y-2">
             {historyQueue.map(entry => {
               const st = statusConfig[entry.status];

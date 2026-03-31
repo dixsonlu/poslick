@@ -10,7 +10,6 @@ const statusConfig: Record<string, { label: string; border: string; bg: string; 
 
 function getElapsedMin(firedAt?: string) {
   if (!firedAt) return 0;
-  // Simulate elapsed for demo
   const fired = new Date(firedAt).getTime();
   const now = Date.now();
   return Math.max(0, Math.round((now - fired) / 60000));
@@ -28,13 +27,13 @@ const AdminKDS: React.FC = () => {
   );
 
   return (
-    <div className="p-7">
-      <div className="mb-6">
+    <div className="p-8">
+      <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground tracking-tight">KDS Monitor</h1>
-        <p className="text-[13px] text-muted-foreground mt-1">{allTickets.length} active tickets</p>
+        <p className="text-sm text-muted-foreground mt-1">{allTickets.length} active tickets</p>
       </div>
 
-      <div className="grid grid-cols-3 gap-5">
+      <div className="grid grid-cols-3 gap-6">
         {(["new", "preparing", "ready"] as const).map(status => {
           const config = statusConfig[status];
           const tickets = allTickets.filter(t => t.status === status);
@@ -42,8 +41,8 @@ const AdminKDS: React.FC = () => {
             <div key={status}>
               <div className="flex items-center gap-2 mb-3">
                 <config.icon className={`h-4 w-4 ${config.text}`} />
-                <span className="section-label">{config.label}</span>
-                <span className={`ml-auto text-[11px] font-bold px-2 py-0.5 rounded-md ${config.bg} ${config.text}`}>
+                <span className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{config.label}</span>
+                <span className={`ml-auto status-badge ${config.bg} ${config.text}`}>
                   {tickets.length}
                 </span>
               </div>
@@ -52,8 +51,7 @@ const AdminKDS: React.FC = () => {
                   const elapsed = getElapsedMin(ticket.firedAt);
                   const isUrgent = status === "new" && elapsed > 10 || status === "preparing" && elapsed > 20;
                   return (
-                    <div key={ticket.id} className={`uniweb-card border-l-4 ${config.border} p-4 ${isUrgent ? "animate-pulse" : ""}`}>
-                      {/* Header */}
+                    <div key={ticket.id} className={`uniweb-card border-l-[3px] ${config.border} p-4 ${isUrgent ? "animate-pulse" : ""}`}>
                       <div className="flex items-center justify-between mb-2.5">
                         <div className="flex items-center gap-2">
                           <span className="font-bold text-foreground text-[14px]">T{ticket.tableNumber}</span>
@@ -67,15 +65,13 @@ const AdminKDS: React.FC = () => {
                         </div>
                       </div>
 
-                      {/* Item name + qty */}
                       <div className="flex items-start justify-between mb-1">
                         <div className="text-[14px] font-semibold text-foreground leading-tight">{ticket.name}</div>
-                        <span className="text-[13px] font-bold text-foreground bg-accent px-2 py-0.5 rounded-md ml-2 shrink-0">
+                        <span className="text-[13px] font-bold text-foreground bg-accent px-2 py-0.5 rounded-full ml-2 shrink-0">
                           ×{ticket.quantity}
                         </span>
                       </div>
 
-                      {/* Combo items */}
                       {ticket.comboItems && ticket.comboItems.length > 0 && (
                         <div className="mt-2 mb-1 pl-2 border-l-2 border-primary/20 space-y-0.5">
                           <div className="flex items-center gap-1 mb-1">
@@ -91,11 +87,10 @@ const AdminKDS: React.FC = () => {
                         </div>
                       )}
 
-                      {/* Modifiers */}
                       {ticket.modifiers.length > 0 && (
                         <div className="mt-1.5 flex flex-wrap gap-1">
                           {ticket.modifiers.map((m, idx) => (
-                            <span key={idx} className="text-[11px] bg-accent text-foreground px-2 py-0.5 rounded-md font-medium">
+                            <span key={idx} className="text-[11px] bg-accent text-foreground px-2 py-0.5 rounded-full font-medium">
                               {m.name}
                               {m.price > 0 && <span className="text-muted-foreground ml-0.5">(+${m.price.toFixed(2)})</span>}
                             </span>
@@ -103,15 +98,13 @@ const AdminKDS: React.FC = () => {
                         </div>
                       )}
 
-                      {/* Notes */}
                       {ticket.notes && (
-                        <div className="mt-2 flex items-start gap-1.5 bg-status-amber-light/50 rounded-md px-2.5 py-1.5">
+                        <div className="mt-2 flex items-start gap-1.5 bg-status-amber-light rounded-lg px-2.5 py-1.5">
                           <MessageSquare className="h-3 w-3 text-status-amber mt-0.5 shrink-0" />
                           <span className="text-[11px] text-foreground font-medium leading-snug">{ticket.notes}</span>
                         </div>
                       )}
 
-                      {/* Flow progress */}
                       <div className="mt-3 flex items-center gap-1">
                         {["new", "preparing", "ready", "served"].map((step, idx) => {
                           const stepIdx = ["new", "preparing", "ready", "served"].indexOf(ticket.status);

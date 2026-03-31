@@ -60,11 +60,11 @@ const AdminFloorPlan: React.FC = () => {
   const zoneTables = tables.filter(t => t.zone === activeZone);
 
   return (
-    <div className="p-7">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-8">
+      <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold text-foreground tracking-tight">Floor Plan Editor</h1>
-          <p className="text-[13px] text-muted-foreground mt-1">{tables.length} tables across {zones.length} zones</p>
+          <p className="text-sm text-muted-foreground mt-1">{tables.length} tables across {zones.length} zones</p>
         </div>
         <div className="flex gap-2">
           <Button variant={isPreview ? "default" : "outline"} size="sm" onClick={() => setIsPreview(!isPreview)}>
@@ -74,14 +74,14 @@ const AdminFloorPlan: React.FC = () => {
       </div>
 
       {/* Zone Tabs */}
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-1 mb-6 bg-accent rounded-lg p-0.5 w-fit">
         {zones.map(z => (
           <button
             key={z.id}
             onClick={() => { setActiveZone(z.name); setSelectedId(null); }}
             className={cn(
-              "px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors",
-              activeZone === z.name ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-accent"
+              "px-3 py-1.5 rounded-md text-xs font-medium transition-colors duration-150",
+              activeZone === z.name ? "bg-card text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"
             )}
           >
             {z.name} ({tables.filter(t => t.zone === z.name).length})

@@ -133,8 +133,8 @@ const AdminPromotions: React.FC = () => {
   if (selected) {
     const cfg = typeConfig[selected.type];
     return (
-      <div className="w-full p-6 lg:p-8">
-        <button onClick={() => setSelectedId(null)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-[13px] mb-6 transition-colors">
+      <div className="w-full p-8">
+        <button onClick={() => setSelectedId(null)} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-[13px] mb-6 transition-colors duration-150">
           <ArrowLeft className="h-4 w-4" /> Back to Promotions
         </button>
 
@@ -261,12 +261,12 @@ const AdminPromotions: React.FC = () => {
 
   // --- List View ---
   return (
-    <div className="w-full p-6 lg:p-8">
+    <div className="w-full p-8">
       {/* Header */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+      <div className="mb-8 flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl font-bold text-foreground">Promotions & Pricing</h1>
-          <p className="text-[13px] text-muted-foreground mt-1">Manage discounts, campaigns, and dynamic pricing strategies</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Promotions & Pricing</h1>
+          <p className="text-sm text-muted-foreground mt-1">Manage discounts, campaigns, and dynamic pricing strategies</p>
         </div>
         <Button className="gap-1.5 text-[13px] rounded-lg">
           <Plus className="h-4 w-4" />
@@ -326,21 +326,18 @@ const PromotionsListView: React.FC<{
 }> = ({ filtered, statusFilter, setStatusFilter, search, setSearch, totalActive, totalGMV, totalUsage, toggleStatus, setSelectedId }) => (
   <>
     {/* KPI cards */}
-    <div className="grid gap-4 md:grid-cols-3 mb-6">
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-status-green" />
-        <div className="section-label mt-1.5 mb-2">Active Campaigns</div>
-        <div className="text-2xl font-bold text-foreground">{totalActive}</div>
+    <div className="grid gap-6 md:grid-cols-3 mb-8">
+      <div className="uniweb-card p-5">
+        <div className="section-label mb-2">Active Campaigns</div>
+        <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none">{totalActive}</div>
       </div>
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-primary" />
-        <div className="section-label mt-1.5 mb-2">Total GMV</div>
-        <div className="text-2xl font-bold text-foreground">${totalGMV.toLocaleString()}</div>
+      <div className="uniweb-card p-5">
+        <div className="section-label mb-2">Total GMV</div>
+        <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none font-mono">${totalGMV.toLocaleString()}</div>
       </div>
-      <div className="uniweb-card relative overflow-hidden p-5">
-        <div className="kpi-stripe bg-status-amber" />
-        <div className="section-label mt-1.5 mb-2">Total Usage</div>
-        <div className="text-2xl font-bold text-foreground">{totalUsage}</div>
+      <div className="uniweb-card p-5">
+        <div className="section-label mb-2">Total Usage</div>
+        <div className="text-[28px] font-bold text-foreground tracking-tighter leading-none">{totalUsage}</div>
       </div>
     </div>
 

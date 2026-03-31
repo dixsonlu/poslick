@@ -2,22 +2,22 @@ import React from "react";
 import { Building2, CreditCard, Globe, Bell } from "lucide-react";
 
 const AdminSettings: React.FC = () => (
-  <div className="p-7">
-    <div className="mb-6">
+  <div className="p-8">
+    <div className="mb-8">
       <h1 className="text-2xl font-bold text-foreground tracking-tight">Settings</h1>
-      <p className="text-[13px] text-muted-foreground mt-1">Configure your outlet</p>
+      <p className="text-sm text-muted-foreground mt-1">Configure your outlet</p>
     </div>
 
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-6">
       {[
         { icon: Building2, title: "Outlet Details", desc: "Business name, address, operating hours", status: "Configured" },
         { icon: CreditCard, title: "Payment Setup", desc: "Uniweb card rail, PayNow, SGQR configuration", status: "Pending KYB" },
         { icon: Globe, title: "Compliance", desc: "ACRA registration, UBO details, KYB status", status: "Under Review" },
         { icon: Bell, title: "Notifications", desc: "Alert preferences, order notifications", status: "Configured" },
       ].map(item => (
-        <button key={item.title} className="uniweb-card p-5 text-left hover:border-primary/30 transition-all cursor-pointer group">
+        <button key={item.title} className="uniweb-card-interactive p-5 text-left group">
           <div className="flex items-center gap-3 mb-3">
-            <div className="w-11 h-11 rounded-[11px] bg-status-blue-light flex items-center justify-center group-hover:bg-primary/15 transition-colors">
+            <div className="w-11 h-11 rounded-xl bg-accent flex items-center justify-center group-hover:bg-primary/10 transition-colors duration-150">
               <item.icon className="h-5 w-5 text-primary" />
             </div>
             <div>

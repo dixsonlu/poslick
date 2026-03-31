@@ -69,8 +69,8 @@ const AdminFinance: React.FC = () => {
   if (viewMode === "detail") {
     const d = settlementDetail;
     return (
-      <div className="p-7">
-        <button onClick={() => setViewMode("overview")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-[13px] mb-5 transition-colors">
+      <div className="p-8">
+        <button onClick={() => setViewMode("overview")} className="flex items-center gap-2 text-muted-foreground hover:text-foreground text-[13px] mb-5 transition-colors duration-150">
           <ArrowLeft className="h-4 w-4" /> Back to Finance
         </button>
 
@@ -111,16 +111,15 @@ const AdminFinance: React.FC = () => {
         </div>
 
         {/* KPIs */}
-        <div className="grid grid-cols-4 gap-4 my-6">
+        <div className="grid grid-cols-4 gap-6 my-6">
           {[
-            { label: "Gross Volume", value: `$${d.kpis.grossVolume.toLocaleString()}`, stripe: "bg-primary", sub: `${d.kpis.txnCount} transactions` },
-            { label: "Total Fees", value: `$${d.kpis.totalFees.toFixed(2)}`, stripe: "bg-destructive", sub: `MDR ${(d.kpis.totalFees / d.kpis.grossVolume * 100).toFixed(2)}%` },
-            { label: "Net Payout", value: `$${d.kpis.netPayout.toLocaleString()}`, stripe: "bg-status-green", sub: `To DBS ${d.account}` },
-            { label: "Refunds", value: `$${d.kpis.refunds.toFixed(2)}`, stripe: "bg-status-amber", sub: `${(d.kpis.refunds / d.kpis.grossVolume * 100).toFixed(3)}% of GMV` },
+            { label: "Gross Volume", value: `$${d.kpis.grossVolume.toLocaleString()}`, sub: `${d.kpis.txnCount} transactions` },
+            { label: "Total Fees", value: `$${d.kpis.totalFees.toFixed(2)}`, sub: `MDR ${(d.kpis.totalFees / d.kpis.grossVolume * 100).toFixed(2)}%` },
+            { label: "Net Payout", value: `$${d.kpis.netPayout.toLocaleString()}`, sub: `To DBS ${d.account}` },
+            { label: "Refunds", value: `$${d.kpis.refunds.toFixed(2)}`, sub: `${(d.kpis.refunds / d.kpis.grossVolume * 100).toFixed(3)}% of GMV` },
           ].map(s => (
-            <div key={s.label} className="uniweb-card relative overflow-hidden p-4">
-              <div className={`kpi-stripe ${s.stripe}`} />
-              <div className="section-label mt-1 mb-2">{s.label}</div>
+            <div key={s.label} className="uniweb-card p-4">
+              <div className="section-label mb-2">{s.label}</div>
               <div className="text-xl font-bold text-foreground tracking-tighter leading-none font-mono">{s.value}</div>
               <div className="text-[10px] text-muted-foreground mt-1">{s.sub}</div>
             </div>
@@ -200,11 +199,11 @@ const AdminFinance: React.FC = () => {
 
   // --- Overview ---
   return (
-    <div className="p-7">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-8">
+      <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-xl font-bold text-foreground tracking-tight">Finance & Reconciliation</h1>
-          <p className="text-[13px] text-muted-foreground mt-1">Settlement tracking, tender mix, and GST reporting</p>
+          <h1 className="text-2xl font-bold text-foreground tracking-tight">Finance & Reconciliation</h1>
+          <p className="text-sm text-muted-foreground mt-1">Settlement tracking, tender mix, and GST reporting</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" className="gap-1.5 text-[12px]">
@@ -217,16 +216,15 @@ const AdminFinance: React.FC = () => {
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-6 mb-8">
         {[
-          { label: "Monthly Gross", value: "$489,630.50", stripe: "bg-primary", sub: "+8.2% vs Dec", trend: "up" },
-          { label: "Net Settled", value: "$481,768.40", stripe: "bg-status-green", sub: "31 batches", trend: "up" },
-          { label: "Total Fees", value: "$7,862.10", stripe: "bg-destructive", sub: "MDR 1.61%", trend: "down" },
-          { label: "GST Collected", value: "$40,231.45", stripe: "bg-status-amber", sub: "IRAS compliant", trend: "up" },
+          { label: "Monthly Gross", value: "$489,630.50", sub: "+8.2% vs Dec", trend: "up" },
+          { label: "Net Settled", value: "$481,768.40", sub: "31 batches", trend: "up" },
+          { label: "Total Fees", value: "$7,862.10", sub: "MDR 1.61%", trend: "down" },
+          { label: "GST Collected", value: "$40,231.45", sub: "IRAS compliant", trend: "up" },
         ].map(s => (
-          <div key={s.label} className="uniweb-card relative overflow-hidden p-5">
-            <div className={`kpi-stripe ${s.stripe}`} />
-            <div className="section-label mt-1.5 mb-2.5">{s.label}</div>
+          <div key={s.label} className="uniweb-card p-5">
+            <div className="section-label mb-2.5">{s.label}</div>
             <div className="text-[22px] font-bold text-foreground tracking-tighter leading-none font-mono">{s.value}</div>
             <div className="flex items-center gap-1 text-[11px] text-muted-foreground mt-1.5">
               {s.trend === "up" ? <TrendingUp className="h-3 w-3 text-status-green" /> : <TrendingDown className="h-3 w-3 text-destructive" />}
@@ -236,7 +234,7 @@ const AdminFinance: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-6 mb-8">
         {/* Tender Mix */}
         <div className="uniweb-card p-5">
           <div className="section-label mb-4">Payment Method Mix</div>
