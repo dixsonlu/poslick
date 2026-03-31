@@ -1,126 +1,113 @@
 
 
-# Complete Implementation Plan
+# UI Upgrade: Tailwind CSS Design Language for Uniweb Admin
 
-This plan restores ALL previously approved items (A1–A4, B1–B6, C1–C4, D) and fixes the drag handle style.
+## Design Analysis — Tailwind CSS Website
 
----
+From the Tailwind site and docs, the key design characteristics:
 
-## A1. Drag Handle — Lovable Style with Hover Gradient Highlight
+1. **Typography**: `tracking-tighter` on headings, `text-balance` for hero text, clean hierarchy with generous line-height
+2. **Sidebar**: Left border indicator (3px `border-l-primary`) for active nav item instead of full background fill; gray-50 hover state; uppercase section labels with wide tracking
+3. **Color approach**: Very restrained — white surfaces, gray-50/100 subtle accents, gray-950 text; primary color used sparingly as accents (left borders, links, badges)
+4. **Cards**: No colored kpi-stripe bars — instead, subtle `border` with generous padding, slight shadow (`shadow-sm`), rounded-xl
+5. **Dark mode**: Deep slate-900/950 backgrounds, slate-800 cards, white/gray-200 text; borders become slate-700/800; transitions smooth via CSS
+6. **Spacing**: Very generous — `p-8` page padding, `gap-6` grids, breathing room everywhere
+7. **Animations**: Subtle fade-in on page load, hover transitions (150ms-200ms), no flashy effects
+8. **Tables**: Clean with `divide-y`, no colored header backgrounds — just font-weight + uppercase + tracking
+9. **Code blocks**: Dark navy `bg-gray-950` with syntax highlighting — applicable to our mono/ID elements
 
-**Problem**: Current handles are a constant 2px blue line — always highlighted, looks garish.
+## What Changes
 
-**Lovable's actual behavior**: Default state is a subtle 1px border-color divider with a small pill indicator. On hover/touch, the line highlights with a gradient that fades at both ends (top and bottom).
+### 1. Sidebar Redesign (AdminLayout.tsx)
+- Active nav: Replace `bg-primary text-primary-foreground` fill → `border-l-[3px] border-primary text-foreground font-semibold bg-transparent` (Tailwind docs style left-border indicator)
+- Hover: `hover:bg-gray-50 dark:hover:bg-white/5` subtle tint
+- Group labels: Add uppercase section dividers between nav groups (e.g., "OPERATIONS", "ANALYTICS", "SYSTEM")
+- Remove merchant strip colored background → use plain text with a subtle divider
+- Brand area: Slightly larger padding, cleaner spacing
 
-**File**: `src/pages/TabletPOS.tsx` (both handles ~line 378 and ~413)
+### 2. Top Header Bar (AdminLayout.tsx)
+- Reduce height to `h-14` (56px) for Tailwind-like density
+- Remove page title from header (redundant — each page has its own h1)
+- Keep only: breadcrumb trail (optional), ThemeToggle, Bell, Avatar
+- Add subtle `shadow-sm` instead of `border-b` for depth
 
-Default state:
-- `w-[2px] bg-border` — subtle gray divider, blends with panel borders
-- Pill capsule: `w-1.5 h-10 rounded-full bg-border/60` — visible but quiet
+### 3. Color Token Refinement (index.css)
+- Light mode: Shift `--background` from warm `36 14% 95%` to neutral `0 0% 98%` (closer to Tailwind gray-50)
+- `--card`: Keep `0 0% 100%` (pure white)
+- `--border`: Shift to `0 0% 90%` (neutral gray-200 feel)
+- `--muted-foreground`: `0 0% 45%` (gray-500 equivalent)
+- Dark mode: Shift to deeper slate tones — `--background: 222 47% 6%`, `--card: 222 47% 9%`
+- Keep Uniweb primary blue `221 63% 33%` unchanged — just use it more sparingly
 
-Hover/active state (CSS-driven via group-hover):
-- Wrap handle div with `group` class
-- Add an overlay `<div>` inside using `absolute inset-0` with a vertical gradient: `bg-gradient-to-b from-transparent via-primary/50 to-transparent` with `opacity-0 group-hover:opacity-100 transition-opacity`
-- Pill on hover: `group-hover:bg-primary`
+### 4. KPI Cards Refinement (all admin pages)
+- Remove `kpi-stripe` colored top bar → replace with a small colored dot or icon tint
+- Use `shadow-sm hover:shadow-md transition-shadow` for depth instead of stripe
+- Larger values text with `tracking-tighter`
+- Change badges to pill-style: `rounded-full px-2.5 py-0.5 text-[11px]`
 
-This means: idle = normal divider line; touch/hover = blue gradient glow fading at top and bottom edges.
+### 5. Table Styling (index.css + all admin pages)
+- Remove `.table-header` colored/bold uppercase approach
+- New style: `text-xs font-medium text-muted-foreground` headers, simple `divide-y` rows
+- Hover: `hover:bg-muted/50` (very subtle)
+- Remove explicit `border-b` per row → use `divide-y divide-border` on tbody
 
-**File**: `src/index.css` — no changes needed (pure Tailwind approach)
+### 6. Page Layout Pattern (all admin pages)
+- Increase page padding from `p-7` to `p-8`
+- Page title: `text-2xl font-bold tracking-tight` (already close, keep)
+- Subtitle: `text-sm text-muted-foreground` (increase from 13px)
+- Grid gaps: `gap-6` instead of `gap-4`
 
----
+### 7. Button & Badge Refinement
+- Primary buttons: `rounded-lg` (already done), add `shadow-sm`
+- Outline buttons: `border-border hover:bg-muted` (already close)
+- Status badges: Move to pill shape `rounded-full` with lighter backgrounds
 
-## A2. Hide Scrollbars Until Hover
+### 8. Animation & Transitions
+- Page enter: Keep existing `fadeUp` but adjust to `0.2s` (snappier)
+- Card hover: Add `transition-all duration-150` for shadow/border changes
+- Sidebar nav: `transition-colors duration-150`
 
-**File**: `src/index.css`
-- Default: `scrollbar-width: none` + `::-webkit-scrollbar { display: none }`
-- On `.pos-scrollbar:hover`: restore `scrollbar-width: thin` + `::-webkit-scrollbar { display: block; width: 4px }`
+### 9. Scrollbar Update (index.css)
+- Already hidden by default per A2 plan — keep that
+- When visible: Use very thin (3px) neutral thumb, no track
 
----
+### 10. uniweb-card Class Update (index.css)
+- Add `shadow-sm` to base `.uniweb-card` definition
+- Remove `border-[1.5px]` → use standard `border`
+- Add `hover:shadow-md transition-shadow duration-150` as optional `.uniweb-card-interactive`
 
-## A3. Unified Header Heights
+## Files to Modify
 
-**Files**: `FloorPanel.tsx`, `MenuComposer.tsx`, `TabletPOS.tsx`
-- All three panel headers → `h-[52px] flex items-center px-3 border-b border-border`
-
----
-
-## A4. Order History List Layout
-
-**File**: `src/components/tablet/history/OrderHistoryList.tsx`
-- Order ID `#xxxx` → top-right absolute label
-- Replace rigid grid with flex-wrap layout
-- Add `overflow-hidden text-ellipsis`
-
----
-
-## B1. Financial Calculations (2-decimal rounding)
-
-**Files**: `TabletPOS.tsx`, `CheckPanel.tsx`, `MobilePOS.tsx`
-- All money math: `Math.round(x * 100) / 100`
-- Order: discount → svc charge (10%) → GST (9% of subtotal+svc)
-- Split bill: equal division, remainder to last share
-
-## B2. Order Lifecycle State Machine
-
-**New file**: `src/lib/order-state-machine.ts`
-- States: `open → sent → preparing → ready → served → paid`; `void` from any
-- Void requires manager PIN
-- `paid` → table status `dirty`
-- Table cleaning: `dirty → cleaning → available`
-
-## B3. Inventory Deduction Stub
-
-**File**: `TabletPOS.tsx`
-- On `sent` transition, call placeholder `deductInventory(order)`
-
-## B4–B6. Discount→Payment, Transfer Sync, Split Bill fixes
-
-As previously planned — pass `finalTotal` to PaymentSheet, sync order on transfer, enforce min 1 seat on split.
-
----
-
-## C1. Inventory Management (`/admin/inventory`)
-
-**New files**: `src/state/inventory-store.ts`, `src/pages/admin/AdminInventory.tsx`
-- KPI cards, Stock List/Purchase Orders/Movement Log tabs
-- Searchable table with stock-level progress bars
-- Stock adjustment modal, PO creation form
-- ~20 mock inventory items in `mock-data.ts`
-
-## C2. Professional CRM Upgrade
-
-**Files**: Expand `Customer` type in `mock-data.ts`, new `src/state/customer-store.ts`, rewrite `AdminCRM.tsx`
-- KPI dashboard, segment filters, expandable detail panel
-- Search, bulk actions, loyalty/birthday tracking
-
-## C3. Floor Plan Editor (`/admin/floorplan`)
-
-**New files**: `src/state/floorplan-store.ts`, `src/pages/admin/AdminFloorPlan.tsx`
-- Grid canvas with pointer-event drag-and-drop
-- Table shapes, zone management, snap-to-grid, preview mode
-
-## C4. Queue Management (`/admin/queue` + `/queue`)
-
-**New files**: `src/state/queue-store.ts`, `src/pages/admin/AdminQueue.tsx`, `src/pages/QueueKiosk.tsx`
-- Queue board, walk-in form, call-next action
-- Public kiosk at `/queue`
-
----
-
-## D. Routes & Navigation
-
-**File**: `App.tsx` — add `/admin/inventory`, `/admin/floorplan`, `/admin/queue`, `/queue`
-
-**File**: `AdminLayout.tsx` — add sidebar items: Inventory (Package), Floor Plan (Map), Queue (ListOrdered)
-
----
+| File | Changes |
+|------|---------|
+| `src/index.css` | Color tokens (light+dark), `.uniweb-card`, `.table-header`, `.section-label`, `.status-badge`, scrollbar, page-enter timing |
+| `src/pages/admin/AdminLayout.tsx` | Sidebar nav with left-border active style, section group labels, remove header page title, add shadow |
+| `src/pages/admin/AdminDashboard.tsx` | Remove kpi-stripe, use shadow cards, increase gaps/padding |
+| `src/pages/admin/AdminFinance.tsx` | Same card/table refinements |
+| `src/pages/admin/AdminSales.tsx` | Same card/table refinements |
+| `src/pages/admin/AdminStaff.tsx` | Table divide-y style |
+| `src/pages/admin/AdminMenu.tsx` | Table/card refinements |
+| `src/pages/admin/AdminSettings.tsx` | Card hover shadow style |
+| `src/pages/admin/AdminCRM.tsx` | Card/table refinements |
+| `src/pages/admin/AdminInventory.tsx` | Card/table refinements |
+| `src/pages/admin/AdminPromotions.tsx` | Card/table refinements |
+| `src/pages/admin/AdminKDS.tsx` | Card refinements |
+| `src/pages/admin/AdminQueue.tsx` | Card/table refinements |
+| `src/pages/admin/AdminFloorPlan.tsx` | Card refinements |
+| `tailwind.config.ts` | No major changes needed — existing tokens are sufficient |
 
 ## Implementation Order
 
-1. Drag handle fix (A1) + scrollbar (A2) + header alignment (A3) + order history (A4)
-2. Financial rounding (B1) + discount-payment fix (B4) + transfer sync (B5) + split bill (B6)
-3. Order state machine (B2) + inventory stub (B3)
-4. New stores (inventory, customer, floorplan, queue)
-5. New pages (Inventory, CRM rewrite, FloorPlan, Queue + Kiosk)
-6. Routes + navigation
+1. **Foundation**: Update `index.css` color tokens + utility classes (cards, tables, badges, animations)
+2. **Sidebar**: Redesign `AdminLayout.tsx` with left-border nav and section groups
+3. **Dashboard**: Apply new card/spacing pattern as reference page
+4. **Remaining pages**: Apply consistent pattern across all admin pages
+5. **Dark mode verification**: Ensure all tokens produce clean dark mode
+
+## What Stays the Same
+- Uniweb primary blue (`221 63% 33%`)
+- DM Sans / DM Mono fonts
+- Overall layout structure (sidebar + main content)
+- All business logic and data
+- TabletPOS and MobilePOS (this upgrade focuses on admin portal)
 
