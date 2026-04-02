@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AlertCircle, ArrowLeft, Download, FileText, Calendar, ChevronRight, TrendingUp, TrendingDown, Eye, Printer } from "lucide-react";
+import { AlertCircle, ArrowLeft, Download, FileText, Calendar, ChevronRight, TrendingUp, TrendingDown, Eye, Printer, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
