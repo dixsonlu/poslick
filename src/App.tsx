@@ -8,6 +8,7 @@ import { LanguageProvider } from "@/hooks/useLanguage";
 import Index from "./pages/Index";
 import TabletPOS from "./pages/TabletPOS";
 import MobilePOS from "./pages/MobilePOS";
+import QROrder from "./pages/QROrder";
 import AdminLayout from "./pages/admin/AdminLayout";
 import AdminDashboard from "./pages/admin/AdminDashboard";
 import AdminMenu from "./pages/admin/AdminMenu";
