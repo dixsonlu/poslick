@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { AlertCircle, ArrowLeft, Download, FileText, Calendar, ChevronRight, TrendingUp, TrendingDown, Eye, Printer, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { getDailyCOGS } from "@/state/inventory-store";
 
 const tenderMix = [
   { method: "Card (Visa/MC/UPI)", amount: 342680.50, pct: 70, color: "bg-primary" },
