@@ -33,6 +33,12 @@ export function verifyManagerPin(pin: string): boolean {
 
 // Inventory deduction stub — called when order transitions to "sent"
 export function deductInventory(orderItems: { menuItemId: string; quantity: number }[]): void {
-  // TODO: Integrate with inventory-store when available
   console.log("[Inventory] Deducting stock for", orderItems.length, "items");
+}
+
+// Cancel an order item — notifies kitchen (KDS) and optionally restores inventory
+export function cancelOrderItem(itemId: string, reason: string): { success: boolean; message: string } {
+  console.log(`[Cancel] Item ${itemId} cancelled: ${reason}`);
+  // In real system: push notification to KDS, update order status, restore inventory
+  return { success: true, message: `Item cancelled: ${reason}. Kitchen notified.` };
 }

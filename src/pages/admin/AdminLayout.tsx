@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router-dom";
 import { NavLink } from "@/components/NavLink";
 import {
   LayoutDashboard, UtensilsCrossed, Users, Shield, Monitor, BarChart3,
-  DollarSign, Settings, LogOut, Bell, Tag, Package, Map, ListOrdered
+  DollarSign, Settings, LogOut, Bell, Tag, Package, Map, ListOrdered, ScreenShare
 } from "lucide-react";
 import uniwebLogo from "@/assets/uniweb-logo.jpg";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -18,6 +18,7 @@ const navGroups = [
       { title: "Floor Plan", url: "/admin/floorplan", icon: Map },
       { title: "Queue", url: "/admin/queue", icon: ListOrdered },
       { title: "KDS Monitor", url: "/admin/kds", icon: Monitor },
+      { title: "Pickup Display", url: "/admin/pickup", icon: ScreenShare },
     ],
   },
   {
