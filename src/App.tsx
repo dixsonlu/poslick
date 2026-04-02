@@ -21,6 +21,7 @@ import AdminPromotions from "./pages/admin/AdminPromotions";
 import AdminInventory from "./pages/admin/AdminInventory";
 import AdminFloorPlan from "./pages/admin/AdminFloorPlan";
 import AdminQueue from "./pages/admin/AdminQueue";
+import AdminPickupDisplay from "./pages/admin/AdminPickupDisplay";
 import QueueKiosk from "./pages/QueueKiosk";
 import NotFound from "./pages/NotFound";
 
