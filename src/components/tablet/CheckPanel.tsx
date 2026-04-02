@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Minus, Plus, Trash2, Users, UtensilsCrossed, Tag, Percent, UserCheck, Split, X, ChevronDown, ChevronUp } from "lucide-react";
+import { Minus, Plus, Trash2, Users, UtensilsCrossed, Tag, Percent, UserCheck, Split, X, ChevronDown, ChevronUp, Gift, Star, Ticket } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { type Order, type Table } from "@/data/mock-data";
@@ -27,6 +27,28 @@ const discountPresets = [
   { label: "$10", value: 10, type: "fixed" as const },
 ];
 
+// Mock member coupons & points
+const memberCoupons = [
+  { id: "mc1", label: "$5 Off (Birthday)", code: "BDAY5", type: "fixed" as const, value: 5, expiresAt: "2026-04-30" },
+  { id: "mc2", label: "15% Off Next Visit", code: "LOYAL15", type: "percentage" as const, value: 15, expiresAt: "2026-05-15" },
+];
+
+interface MemberInfo {
+  name: string;
+  phone: string;
+  tier: string;
+  points: number;
+  coupons: typeof memberCoupons;
+}
+
+const mockMember: MemberInfo = {
+  name: "Tan Wei Ming",
+  phone: "+65 9123 4567",
+  tier: "Gold",
+  points: 1250,
+  coupons: memberCoupons,
+};
+
 export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQuantity, onRemoveItem, onPay }) => {
   const { t } = useLanguage();
   const [promoCode, setPromoCode] = useState("");
@@ -37,6 +59,8 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
   const [splitCount, setSplitCount] = useState(1);
   const [showSplit, setShowSplit] = useState(false);
   const [promoError, setPromoError] = useState("");
+  const [pointsToRedeem, setPointsToRedeem] = useState(0);
+  const [appliedCoupon, setAppliedCoupon] = useState<typeof memberCoupons[0] | null>(null);
 
   if (!order) {
     return (
@@ -47,17 +71,24 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
     );
   }
 
+  // Points conversion: 100 points = $1
+  const pointsDiscount = Math.round(pointsToRedeem / 100 * 100) / 100;
+
   // Calculate discount
   const calcDiscount = () => {
     let discount = 0;
-    if (appliedPromo) {
+    if (appliedCoupon) {
+      if (appliedCoupon.type === "percentage") discount = order.subtotal * (appliedCoupon.value / 100);
+      else discount = appliedCoupon.value;
+    } else if (appliedPromo) {
       if (appliedPromo.type === "percentage") discount = order.subtotal * (appliedPromo.value / 100);
       else discount = appliedPromo.value;
     } else if (manualDiscount) {
       if (manualDiscount.type === "percentage") discount = order.subtotal * (manualDiscount.value / 100);
       else discount = manualDiscount.value;
     }
-    if (memberDetected && !appliedPromo) discount += order.subtotal * 0.05; // 5% member discount
+    if (memberDetected && !appliedPromo && !appliedCoupon) discount += order.subtotal * 0.05; // 5% member discount
+    discount += pointsDiscount;
     return Math.min(discount, order.subtotal);
   };
 
@@ -77,6 +108,7 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
       }
       setAppliedPromo(found);
       setManualDiscount(null);
+      setAppliedCoupon(null);
       setPromoError("");
     } else {
       setPromoError(t("invalid_promo") || "Invalid promo code");
@@ -95,15 +127,25 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
     } else {
       setManualDiscount({ type: preset.type, value: preset.value });
       setAppliedPromo(null);
+      setAppliedCoupon(null);
       setPromoCode("");
     }
   };
+
+  const handleApplyCoupon = (coupon: typeof memberCoupons[0]) => {
+    setAppliedCoupon(coupon);
+    setAppliedPromo(null);
+    setManualDiscount(null);
+    setPromoCode("");
+  };
+
+  const maxRedeemable = Math.min(mockMember.points, Math.floor(order.subtotal * 100)); // Max points = subtotal in cents
 
   return (
     <div className="bg-card flex flex-col h-full">
       {/* Header */}
       <div className="h-[52px] px-4 border-b border-border flex items-center shrink-0">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between w-full">
           <div>
             <h3 className="font-semibold text-foreground text-[13px]">
               {table ? `${t("tables")} ${table.number}` : `${order.serviceMode}`}
@@ -185,7 +227,13 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
               {t("promo")}
             </button>
             <button
-              onClick={() => setMemberDetected(!memberDetected)}
+              onClick={() => {
+                setMemberDetected(!memberDetected);
+                if (!memberDetected) {
+                  setShowPromoSection(true);
+                  setShowSplit(false);
+                }
+              }}
               className={cn(
                 "flex items-center gap-1 px-2.5 py-1.5 rounded-md text-[11px] font-medium transition-colors min-h-[36px]",
                 memberDetected ? "bg-status-green-light text-status-green" : "text-muted-foreground hover:bg-accent"
@@ -206,9 +254,82 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
             </button>
           </div>
 
-          {/* Promo code + discount presets */}
+          {/* Promo / Member Unified Section */}
           {showPromoSection && (
             <div className="px-3 pb-2 space-y-2">
+              {/* Member info + coupons + points (shown when member is detected) */}
+              {memberDetected && (
+                <div className="space-y-2">
+                  {/* Member card */}
+                  <div className="flex items-center gap-2 bg-status-green-light rounded-lg px-3 py-2">
+                    <UserCheck className="h-3.5 w-3.5 text-status-green" />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[11px] font-semibold text-status-green">{mockMember.name}</span>
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-status-amber-light text-status-amber">{mockMember.tier}</span>
+                      </div>
+                      <span className="text-[10px] text-status-green">5% member discount</span>
+                    </div>
+                    <button onClick={() => { setMemberDetected(false); setPointsToRedeem(0); setAppliedCoupon(null); }} className="p-1 rounded hover:bg-status-green/10 active:scale-95">
+                      <X className="h-3 w-3 text-status-green" />
+                    </button>
+                  </div>
+
+                  {/* Coupons */}
+                  {mockMember.coupons.length > 0 && (
+                    <div>
+                      <div className="flex items-center gap-1 mb-1">
+                        <Ticket className="h-3 w-3 text-primary" />
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Coupons</span>
+                      </div>
+                      <div className="flex gap-1.5">
+                        {mockMember.coupons.map(c => (
+                          <button
+                            key={c.id}
+                            onClick={() => appliedCoupon?.id === c.id ? setAppliedCoupon(null) : handleApplyCoupon(c)}
+                            className={cn(
+                              "flex-1 px-2 py-1.5 rounded-lg text-[10px] font-medium border transition-colors active:scale-95",
+                              appliedCoupon?.id === c.id
+                                ? "bg-primary text-primary-foreground border-primary"
+                                : "bg-card border-border text-foreground hover:border-primary/40"
+                            )}
+                          >
+                            <div className="font-semibold">{c.label}</div>
+                            <div className="text-[9px] opacity-70 mt-0.5">Exp: {c.expiresAt}</div>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Points redemption */}
+                  <div>
+                    <div className="flex items-center justify-between mb-1">
+                      <div className="flex items-center gap-1">
+                        <Star className="h-3 w-3 text-status-amber" />
+                        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Points</span>
+                      </div>
+                      <span className="text-[10px] font-mono text-muted-foreground">{mockMember.points.toLocaleString()} pts available</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="range"
+                        min={0}
+                        max={maxRedeemable}
+                        step={100}
+                        value={pointsToRedeem}
+                        onChange={e => setPointsToRedeem(Number(e.target.value))}
+                        className="flex-1 h-1.5 accent-primary"
+                      />
+                      <div className="text-right min-w-[60px]">
+                        <div className="text-[11px] font-bold text-foreground font-mono">{pointsToRedeem} pts</div>
+                        {pointsToRedeem > 0 && <div className="text-[9px] text-status-green font-mono">-${pointsDiscount.toFixed(2)}</div>}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* Applied promo */}
               {appliedPromo && (
                 <div className="flex items-center justify-between bg-status-green-light rounded-lg px-3 py-2">
@@ -222,8 +343,21 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
                 </div>
               )}
 
-              {/* Promo code input */}
-              {!appliedPromo && (
+              {/* Applied coupon badge (non-member promo section) */}
+              {appliedCoupon && !memberDetected && (
+                <div className="flex items-center justify-between bg-primary/10 rounded-lg px-3 py-2">
+                  <div>
+                    <span className="text-[11px] font-semibold text-primary">{appliedCoupon.label}</span>
+                    <span className="text-[10px] text-primary ml-1.5 font-mono">-{appliedCoupon.type === "percentage" ? `${appliedCoupon.value}%` : `$${appliedCoupon.value}`}</span>
+                  </div>
+                  <button onClick={() => setAppliedCoupon(null)} className="p-1 rounded hover:bg-primary/10 active:scale-95">
+                    <X className="h-3 w-3 text-primary" />
+                  </button>
+                </div>
+              )}
+
+              {/* Promo code input (when no coupon/promo applied) */}
+              {!appliedPromo && !appliedCoupon && (
                 <div className="flex gap-1.5">
                   <input
                     value={promoCode}
@@ -239,8 +373,8 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
               )}
               {promoError && <p className="text-[10px] text-destructive">{promoError}</p>}
 
-              {/* Quick discount presets */}
-              {!appliedPromo && (
+              {/* Quick discount presets (when no promo/coupon applied and not member) */}
+              {!appliedPromo && !appliedCoupon && !memberDetected && (
                 <div className="flex gap-1.5">
                   {discountPresets.map(p => (
                     <button
@@ -261,17 +395,17 @@ export const CheckPanel: React.FC<CheckPanelProps> = ({ order, table, onUpdateQu
             </div>
           )}
 
-          {/* Member badge */}
+          {/* Member badge (collapsed view when promo section not open) */}
           {memberDetected && !showPromoSection && (
             <div className="px-3 pb-2">
               <div className="flex items-center gap-2 bg-status-green-light rounded-lg px-3 py-2">
                 <UserCheck className="h-3.5 w-3.5 text-status-green" />
                 <div className="flex-1">
-                  <span className="text-[11px] font-semibold text-status-green">{t("member_discount_applied")}</span>
-                  <span className="text-[10px] text-status-green ml-1">5% OFF</span>
+                  <span className="text-[11px] font-semibold text-status-green">{mockMember.name}</span>
+                  <span className="text-[10px] text-status-green ml-1">· {mockMember.tier} · {pointsToRedeem > 0 ? `${pointsToRedeem}pts` : "5% OFF"}</span>
                 </div>
-                <button onClick={() => setMemberDetected(false)} className="p-1 rounded hover:bg-status-green/10 active:scale-95">
-                  <X className="h-3 w-3 text-status-green" />
+                <button onClick={() => { setShowPromoSection(true); setShowSplit(false); }} className="p-1 rounded hover:bg-status-green/10">
+                  <ChevronDown className="h-3 w-3 text-status-green" />
                 </button>
               </div>
             </div>
