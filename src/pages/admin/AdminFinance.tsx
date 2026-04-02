@@ -280,6 +280,45 @@ const AdminFinance: React.FC = () => {
         </div>
       </div>
 
+      {/* Daily COGS Summary */}
+      {(() => {
+        const cogs = getDailyCOGS();
+        return (
+          <div className="uniweb-card p-5 mb-8">
+            <div className="flex items-center gap-2 mb-4">
+              <BarChart3 className="h-4 w-4 text-primary" />
+              <span className="section-label">Daily Settlement COGS</span>
+            </div>
+            <div className="grid grid-cols-4 gap-4 mb-4">
+              <div>
+                <div className="text-[10px] text-muted-foreground mb-0.5">Daily COGS</div>
+                <div className="text-lg font-bold text-foreground font-mono">${cogs.totalCOGS.toFixed(2)}</div>
+              </div>
+              <div>
+                <div className="text-[10px] text-muted-foreground mb-0.5">COGS %</div>
+                <div className={cn("text-lg font-bold font-mono", cogs.cogsPercent > 35 ? "text-destructive" : cogs.cogsPercent > 30 ? "text-status-amber" : "text-status-green")}>{cogs.cogsPercent}%</div>
+              </div>
+              <div>
+                <div className="text-[10px] text-muted-foreground mb-0.5">Target</div>
+                <div className="text-lg font-bold text-muted-foreground font-mono">&lt;30%</div>
+              </div>
+              <div>
+                <div className="text-[10px] text-muted-foreground mb-0.5">Top Cost Item</div>
+                <div className="text-[13px] font-semibold text-foreground">{cogs.breakdown[0]?.name}</div>
+                <div className="text-[10px] text-muted-foreground font-mono">${cogs.breakdown[0]?.dailyCost.toFixed(2)}/day</div>
+              </div>
+            </div>
+            <div className="flex gap-1.5 flex-wrap">
+              {cogs.breakdown.slice(0, 6).map(b => (
+                <span key={b.name} className="text-[10px] bg-accent text-muted-foreground px-2 py-0.5 rounded-full font-medium">
+                  {b.name}: <span className="font-mono">${b.dailyCost.toFixed(0)}</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Settlements Table */}
       <div className="uniweb-card overflow-hidden">
         <div className="px-5 py-3.5 border-b border-border flex items-center justify-between">
