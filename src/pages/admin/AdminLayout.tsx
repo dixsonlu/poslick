@@ -18,6 +18,7 @@ const navGroups = [
       { title: "Floor Plan", url: "/admin/floorplan", icon: Map },
       { title: "Queue", url: "/admin/queue", icon: ListOrdered },
       { title: "KDS Monitor", url: "/admin/kds", icon: Monitor },
+      { title: "Pickup Display", url: "/admin/pickup", icon: ScreenShare },
     ],
   },
   {
