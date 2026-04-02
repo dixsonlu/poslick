@@ -40,6 +40,7 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/tablet" element={<TabletPOS />} />
               <Route path="/mobile" element={<MobilePOS />} />
+              <Route path="/order" element={<QROrder />} />
               <Route path="/queue" element={<QueueKiosk />} />
               <Route path="/admin" element={<AdminLayout />}>
                 <Route index element={<AdminDashboard />} />
