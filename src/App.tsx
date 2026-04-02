@@ -53,6 +53,7 @@ const App = () => (
                 <Route path="inventory" element={<AdminInventory />} />
                 <Route path="floorplan" element={<AdminFloorPlan />} />
                 <Route path="queue" element={<AdminQueue />} />
+                <Route path="pickup" element={<AdminPickupDisplay />} />
               </Route>
               <Route path="*" element={<NotFound />} />
             </Routes>
