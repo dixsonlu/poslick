@@ -1,113 +1,93 @@
 
 
-# UI Upgrade: Tailwind CSS Design Language for Uniweb Admin
+# 仓库差异对照（上次拉取 vs 本次拉取）
 
-## Design Analysis — Tailwind CSS Website
+**上次拉取节点**：`Add dynamic category CRUD`（2026-04-09/10）
+**本次最新节点**：`fix: Floor Plan table editing` (2026-04-18，本地提交)，GitHub 主分支可见最新为 2026-04-17 系列
 
-From the Tailwind site and docs, the key design characteristics:
+新增 **~14 个新提交**，主题集中在：**Supabase 全量化迁移、Buffet 自助餐、Floor Zones、Promotions、动态定价、实时订阅**。
 
-1. **Typography**: `tracking-tighter` on headings, `text-balance` for hero text, clean hierarchy with generous line-height
-2. **Sidebar**: Left border indicator (3px `border-l-primary`) for active nav item instead of full background fill; gray-50 hover state; uppercase section labels with wide tracking
-3. **Color approach**: Very restrained — white surfaces, gray-50/100 subtle accents, gray-950 text; primary color used sparingly as accents (left borders, links, badges)
-4. **Cards**: No colored kpi-stripe bars — instead, subtle `border` with generous padding, slight shadow (`shadow-sm`), rounded-xl
-5. **Dark mode**: Deep slate-900/950 backgrounds, slate-800 cards, white/gray-200 text; borders become slate-700/800; transitions smooth via CSS
-6. **Spacing**: Very generous — `p-8` page padding, `gap-6` grids, breathing room everywhere
-7. **Animations**: Subtle fade-in on page load, hover transitions (150ms-200ms), no flashy effects
-8. **Tables**: Clean with `divide-y`, no colored header backgrounds — just font-weight + uppercase + tracking
-9. **Code blocks**: Dark navy `bg-gray-950` with syntax highlighting — applicable to our mono/ID elements
+---
 
-## What Changes
+## 一、新增数据库 Migration（5 个）
 
-### 1. Sidebar Redesign (AdminLayout.tsx)
-- Active nav: Replace `bg-primary text-primary-foreground` fill → `border-l-[3px] border-primary text-foreground font-semibold bg-transparent` (Tailwind docs style left-border indicator)
-- Hover: `hover:bg-gray-50 dark:hover:bg-white/5` subtle tint
-- Group labels: Add uppercase section dividers between nav groups (e.g., "OPERATIONS", "ANALYTICS", "SYSTEM")
-- Remove merchant strip colored background → use plain text with a subtle divider
-- Brand area: Slightly larger padding, cleaner spacing
+| 文件 | 内容 |
+|---|---|
+| `03_buffet_mode.sql` | 自助餐模式：buffet plan / 餐别 / 计时 |
+| `04_floor_zones.sql` | 楼层区域（Zones）独立表 |
+| `05_promotions.sql` | 促销表（含 GMV 贡献统计）|
+| `06_pricing_strategies.sql` | 动态定价策略表 |
+| `07_floor_layout.sql` | 桌子坐标 / canvas 尺寸持久化 |
+| `08_orders_payment_method.sql` | orders 增加 payment_method 字段 |
 
-### 2. Top Header Bar (AdminLayout.tsx)
-- Reduce height to `h-14` (56px) for Tailwind-like density
-- Remove page title from header (redundant — each page has its own h1)
-- Keep only: breadcrumb trail (optional), ThemeToggle, Bell, Avatar
-- Add subtle `shadow-sm` instead of `border-b` for depth
+> 配合 `feat: migrate to own Supabase project with full schema + seed data`（2026-04-17）—— 完整自有 schema + 种子数据。
 
-### 3. Color Token Refinement (index.css)
-- Light mode: Shift `--background` from warm `36 14% 95%` to neutral `0 0% 98%` (closer to Tailwind gray-50)
-- `--card`: Keep `0 0% 100%` (pure white)
-- `--border`: Shift to `0 0% 90%` (neutral gray-200 feel)
-- `--muted-foreground`: `0 0% 45%` (gray-500 equivalent)
-- Dark mode: Shift to deeper slate tones — `--background: 222 47% 6%`, `--card: 222 47% 9%`
-- Keep Uniweb primary blue `221 63% 33%` unchanged — just use it more sparingly
+## 二、新增前端页面
 
-### 4. KPI Cards Refinement (all admin pages)
-- Remove `kpi-stripe` colored top bar → replace with a small colored dot or icon tint
-- Use `shadow-sm hover:shadow-md transition-shadow` for depth instead of stripe
-- Larger values text with `tracking-tighter`
-- Change badges to pill-style: `rounded-full px-2.5 py-0.5 text-[11px]`
+| 新页面 | 说明 |
+|---|---|
+| `src/pages/KDSPage.tsx` | **独立可操作 KDS**（之前只有 Admin 内嵌只读版）|
+| `src/pages/KioskOrdering.tsx` | **完整 Kiosk 自助点餐流程** |
+| `src/pages/QROrdering.tsx` | 重构后的 **QR 点餐**（替代原 `/order`）|
+| `src/pages/admin/AdminBuffet.tsx` | **自助餐管理后台** |
 
-### 5. Table Styling (index.css + all admin pages)
-- Remove `.table-header` colored/bold uppercase approach
-- New style: `text-xs font-medium text-muted-foreground` headers, simple `divide-y` rows
-- Hover: `hover:bg-muted/50` (very subtle)
-- Remove explicit `border-b` per row → use `divide-y divide-border` on tbody
+## 三、新增数据访问层 `src/lib/db-*.ts`（12 个）
 
-### 6. Page Layout Pattern (all admin pages)
-- Increase page padding from `p-7` to `p-8`
-- Page title: `text-2xl font-bold tracking-tight` (already close, keep)
-- Subtitle: `text-sm text-muted-foreground` (increase from 13px)
-- Grid gaps: `gap-6` instead of `gap-4`
+完整 Supabase 数据访问抽象层，覆盖：
+`db-buffet / db-crm / db-inventory / db-menu / db-orders / db-pricing / db-promotions / db-queue / db-settings / db-staff / db-table / db-zone`
 
-### 7. Button & Badge Refinement
-- Primary buttons: `rounded-lg` (already done), add `shadow-sm`
-- Outline buttons: `border-border hover:bg-muted` (already close)
-- Status badges: Move to pill shape `rounded-full` with lighter backgrounds
+> 对应提交 `feat: full Supabase integration - connect all stores and pages` 与 `feat: migrate all remaining hardcoded data to Supabase`，并且 `delete mock-data.ts` —— **mock 数据彻底移除**。
 
-### 8. Animation & Transitions
-- Page enter: Keep existing `fadeUp` but adjust to `0.2s` (snappier)
-- Card hover: Add `transition-all duration-150` for shadow/border changes
-- Sidebar nav: `transition-colors duration-150`
+## 四、新增组件目录
 
-### 9. Scrollbar Update (index.css)
-- Already hidden by default per A2 plan — keep that
-- When visible: Use very thin (3px) neutral thumb, no track
+- `src/components/auth/` — 登录/认证组件
+- `src/components/kiosk/` — Kiosk 子组件
+- `src/components/qr/` — QR 子组件
+- `src/components/ErrorBoundary.tsx`
+- `src/components/GrainBackground.tsx`
 
-### 10. uniweb-card Class Update (index.css)
-- Add `shadow-sm` to base `.uniweb-card` definition
-- Remove `border-[1.5px]` → use standard `border`
-- Add `hover:shadow-md transition-shadow duration-150` as optional `.uniweb-card-interactive`
+## 五、新增 hook
 
-## Files to Modify
+- `src/hooks/useZones.tsx` — Floor Zones CRUD + Supabase 持久化
 
-| File | Changes |
-|------|---------|
-| `src/index.css` | Color tokens (light+dark), `.uniweb-card`, `.table-header`, `.section-label`, `.status-badge`, scrollbar, page-enter timing |
-| `src/pages/admin/AdminLayout.tsx` | Sidebar nav with left-border active style, section group labels, remove header page title, add shadow |
-| `src/pages/admin/AdminDashboard.tsx` | Remove kpi-stripe, use shadow cards, increase gaps/padding |
-| `src/pages/admin/AdminFinance.tsx` | Same card/table refinements |
-| `src/pages/admin/AdminSales.tsx` | Same card/table refinements |
-| `src/pages/admin/AdminStaff.tsx` | Table divide-y style |
-| `src/pages/admin/AdminMenu.tsx` | Table/card refinements |
-| `src/pages/admin/AdminSettings.tsx` | Card hover shadow style |
-| `src/pages/admin/AdminCRM.tsx` | Card/table refinements |
-| `src/pages/admin/AdminInventory.tsx` | Card/table refinements |
-| `src/pages/admin/AdminPromotions.tsx` | Card/table refinements |
-| `src/pages/admin/AdminKDS.tsx` | Card refinements |
-| `src/pages/admin/AdminQueue.tsx` | Card/table refinements |
-| `src/pages/admin/AdminFloorPlan.tsx` | Card refinements |
-| `tailwind.config.ts` | No major changes needed — existing tokens are sufficient |
+## 六、关键功能性提交摘要
 
-## Implementation Order
+- **Buffet Mode 全实现**（`feat: buffet mode — full implementation`）
+- **Floor Plan**：Zone CRUD、桌位编辑、画布尺寸、全屏卡片、点击编辑修复
+- **Realtime 订阅**：`fix: add realtime subscription to MobilePOS`
+- **AdminFinance / AdminBuffet 接入真实 DB**
+- **AdminPromotions** 多次健壮性修复（white screen、null-safe gmvContribution）
+- **MobilePOS 静态导入**修复（`fix: replace dynamic import with static`）
+- **Buffet 导航位置调整**（放到 Menu 之下）
 
-1. **Foundation**: Update `index.css` color tokens + utility classes (cards, tables, badges, animations)
-2. **Sidebar**: Redesign `AdminLayout.tsx` with left-border nav and section groups
-3. **Dashboard**: Apply new card/spacing pattern as reference page
-4. **Remaining pages**: Apply consistent pattern across all admin pages
-5. **Dark mode verification**: Ensure all tokens produce clean dark mode
+---
 
-## What Stays the Same
-- Uniweb primary blue (`221 63% 33%`)
-- DM Sans / DM Mono fonts
-- Overall layout structure (sidebar + main content)
-- All business logic and data
-- TabletPOS and MobilePOS (this upgrade focuses on admin portal)
+## 七、与本项目当前状态的差距
+
+我们当前项目对应 Apr 9 节点；本次新增的差距清单：
+
+| 类别 | 我们目前 | 仓库新增 | 缺口 |
+|---|---|---|---|
+| 数据层 | 本地 store + mock-data | Supabase + db-*.ts 抽象层 | **整层未迁移** |
+| KDS | Admin 内只读 | 独立 `/kds` 可操作 | 缺独立页 |
+| Kiosk | 无 | `/kiosk` 完整流程 | 缺整页 |
+| QR | `/order` 简化版 | `/qr` 完整 + 会员/支付模式 | 需重构 |
+| Buffet | 无 | 全套 schema + 后台 | 完全缺失 |
+| Floor Zones | 无 | 独立 zones + 持久化布局 | 缺失 |
+| Promotions | 静态 | DB + GMV 贡献统计 | 需接 DB |
+| 动态定价 | 本地 store | DB 策略表 | 需接 DB |
+| Realtime | 无 | MobilePOS 已订阅 | 未实现 |
+| Mock 数据 | 仍在 | 已删除 | — |
+
+---
+
+## 八、建议下一步实施顺序
+
+1. **数据库基线对齐**：导入 8 个 migration（03–08 + 3 个时间戳基线）
+2. **db-*.ts 数据访问层** 引入并替换 store
+3. 接入 **Realtime**（MobilePOS / KDS / Pickup）
+4. 新增 **`/kds`、`/kiosk`、`/qr`** 三个完整页面
+5. 新增 **AdminBuffet** + Buffet schema 联调
+6. **Floor Zones / 动态定价 / Promotions** 接入 DB
+7. 移除 mock-data，添加 ErrorBoundary
 
